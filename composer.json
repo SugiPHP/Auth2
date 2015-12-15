@@ -1,0 +1,23 @@
+{
+    "name": "sugiphp/auth2",
+    "type": "library",
+    "description": "SugiPHP Authentication Component v.2",
+    "keywords": ["auth", "login", "register", "user"],
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Plamen Popov",
+            "email": "tzappa@gmail.com"
+        }
+    ],
+    "require": {
+        "php": ">=5.5",
+        "psr/log": "~1.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "SugiPHP\\Auth2\\": ""
+        }
+    },
+    "minimum-stability": "dev"
+}
