@@ -7,36 +7,24 @@
 
 namespace SugiPHP\Auth2\Tests;
 
-use SugiPHP\Auth2\Gateway\Gateway;
+use SugiPHP\Auth2\Gateway\MemoryGateway as Gateway;
 use SugiPHP\Auth2\Gateway\LoginGatewayInterface;
 use SugiPHP\Auth2\Gateway\RegistrationGatewayInterface;
 use PDO;
 
-class GatewayTest extends \PHPUnit_Framework_TestCase
+class MemoryGatewayTest extends \PHPUnit_Framework_TestCase
 {
-    const SCHEMA = "CREATE TABLE auth2 (
-        id INTEGER NOT NULL PRIMARY KEY,
-        username VARCHAR(255) UNIQUE,
-        email VARCHAR(255) UNIQUE,
-        password VARCHAR(255),
-        state INTEGER NOT NULL,
-        reg_date TIMESTAMP NOT NULL,
-        pass_change_date TIMESTAMP)";
-    const DEMODATA = "INSERT INTO auth2 VALUES
-        (1, 'foo', 'foo@bar.com', '', 2, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
-        (7, 'demo', 'demo@example.com', '', 1, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
-        (9, 'bar', NULL, NULL, 2, CURRENT_TIMESTAMP, NULL)";
+    const DEMODATA = [
+        1 => ["id" => 1, "username" => 'foo',  "email" => 'foo@bar.com',      "password" => '', "state" => 2],
+        7 => ["id" => 7, "username" => 'demo', "email" => 'demo@example.com', "password" => '', "state" => 1],
+        9 => ["id" => 9, "username" => 'bar',  "email" => null,               "password" => '', "state" => 2],
+    ];
 
     private $gateway;
 
     public function setUp()
     {
-        $db = new PDO('sqlite::memory:');
-        $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-        $db->exec(self::SCHEMA);
-        $db->exec(self::DEMODATA);
-
-        $this->gateway = new Gateway($db);
+        $this->gateway = new Gateway(self::DEMODATA);
     }
 
     public function testGatewayImplementsLoginGatewayInterface()
@@ -68,8 +56,6 @@ class GatewayTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('demo', $row["username"]);
         $this->assertEquals('demo@example.com', $row["email"]);
         $this->assertEquals(1, $row["state"]);
-        $this->assertNotEmpty($row["reg_date"]);
-        $this->assertNotEmpty($row["pass_change_date"]);
         $this->assertTrue(isset($row["password"]));
     }
 
@@ -139,8 +125,6 @@ class GatewayTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals("new@user.mail", $row["email"]);
         $this->assertEquals("newusername", $row["username"]);
         $this->assertEquals(2, $row["state"]);
-        $this->assertNotEmpty($row["reg_date"]);
-        $this->assertNotEmpty($row["pass_change_date"]);
     }
 
     /**

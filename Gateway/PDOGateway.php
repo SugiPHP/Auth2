@@ -9,7 +9,7 @@ namespace SugiPHP\Auth2\Gateway;
 
 use PDO;
 
-class Gateway implements
+class PDOGateway implements
     LoginGatewayInterface,
     RegistrationGatewayInterface
 {
