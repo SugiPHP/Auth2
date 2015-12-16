@@ -21,9 +21,11 @@ class TokenGenerator implements TokenGeneratorInterface
      */
     public function generateToken()
     {
+        $len = $this->getTokenLenght();
+
         // make it random
         if (function_exists("random_bytes")) {
-            $code = random_bytes($this->tokenLength / 8);
+            $code = random_bytes($len / 8);
         } else {
             $code = mt_rand() . uniqid(mt_rand(), true) . microtime(true) . mt_rand();
         }
@@ -32,8 +34,13 @@ class TokenGenerator implements TokenGeneratorInterface
         // base64_encode for the sha-512 produces 172 chars, 171 without "=".
         $code = trim(base64_encode(hash("sha512", $code)), "=");
         // extract only part of it
-        $code = substr($code, mt_rand(0, strlen($code) - $this->tokenLength - 1), $this->tokenLength);
+        $code = substr($code, mt_rand(0, strlen($code) - $len - 1), $len);
 
         return $code;
+    }
+
+    public function getTokenLenght()
+    {
+        return $this->tokenLength;
     }
 }

@@ -87,7 +87,6 @@ class Gateway implements
         return (int) (($pg) ? $sth->fetchColumn() : $this->db->lastInsertId());
     }
 
-
     /**
      * @see RegistrationGatewayInterface::updateState()
      */
