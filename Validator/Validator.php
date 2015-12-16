@@ -34,9 +34,10 @@ class Validator implements ValidatorInterface
             throw new InvalidArgumentException("Моля въведете email адрес");
         }
 
-        if (mb_strlen($email, "UTF-8") > 255) {
-            $this->log("debug", "Email mismatch - more than 255 chars");
-            throw new InvalidArgumentException("Невалиден email адрес");
+        $len = mb_strlen($email, "UTF-8");
+        if ($len > 255) {
+            $this->log("debug", "Email mismatch - more than 255 chars ($len chars provided)");
+            throw new InvalidArgumentException("Невалиден email адрес ($len символа)");
         }
 
         if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
@@ -53,24 +54,28 @@ class Validator implements ValidatorInterface
      */
     public function checkUsername($username)
     {
+        // Required username is missing
         if (!$username) {
             $this->log("debug", "Required parameter username is missing");
-            // Required username is missing
             throw new InvalidArgumentException("Моля въведете потребител");
         }
-        if (mb_strlen($username, "UTF-8") < 3) {
+
+        $len = mb_strlen($username, "UTF-8");
+        // Username too short
+        if ($len < 3) {
             $this->log("debug", "Username mismatch - less than 3 chars");
-            // Username too short
             throw new InvalidArgumentException("Потребителското име трябва да е поне 3 символа");
         }
-        if (mb_strlen($username, "UTF-8") > 32) {
+
+        // Username too long
+        if ($len > 32) {
             $this->log("debug", "Username mismatch - more than 32 chars");
-            // Username too long
             throw new InvalidArgumentException("Потребителското име не трябва да надвишава 32 символа");
         }
+
+        // Illegal username
         if (!preg_match("#^[a-z]([a-z0-9-_\.])+$#i", $username)) {
             $this->log("debug", "Username contains chars that are not allowed");
-            // Illegal username
             throw new InvalidArgumentException("Потребителското име съдържа непозволени символи");
         }
     }
@@ -83,7 +88,7 @@ class Validator implements ValidatorInterface
      */
     public function checkPassword($password)
     {
-        if (!$password = trim($password)) {
+        if (!$password) {
             // Required password is missing
             throw new InvalidArgumentException("Моля въведете парола");
         }
@@ -102,7 +107,7 @@ class Validator implements ValidatorInterface
             }
         }
         if ($diff < 2) {
-            // Password must contain at least 2 different type of chars (lowercase letters, uppercase letters, digits and special symbols)
+            // Password must contain at least 2 different type of chars - lowercase letters, uppercase letters, digits and special symbols
             throw new InvalidArgumentException("Паролата трябва да съдържа поне 2 типа символи (малки букви, главни букви, цифри и специални символи)");
         }
     }
