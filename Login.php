@@ -40,10 +40,14 @@ class Login
     }
 
     /**
-     *
+     * Login
      *
      * @param string $login Username or email
      * @param string $password
+     *
+     * @throws InvalidArgumentException If the username/password is not given
+     * @throws GeneralException On login fail
+     * @throws GeneralException On not activated (inactive/blocked) accounts
      */
     public function login($login, $password)
     {

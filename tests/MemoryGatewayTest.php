@@ -10,7 +10,6 @@ namespace SugiPHP\Auth2\Tests;
 use SugiPHP\Auth2\Gateway\MemoryGateway as Gateway;
 use SugiPHP\Auth2\Gateway\LoginGatewayInterface;
 use SugiPHP\Auth2\Gateway\RegistrationGatewayInterface;
-use PDO;
 
 class MemoryGatewayTest extends \PHPUnit_Framework_TestCase
 {
