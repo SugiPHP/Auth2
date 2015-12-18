@@ -45,7 +45,7 @@ class Registration
      * @param string $password
      * @param string $password2 Password confirmation
      *
-     * @return array  User info
+     * @return array User info
      *
      * @throws InvalidArgumentException
      * @throws GeneralException

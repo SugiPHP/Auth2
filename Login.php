@@ -8,7 +8,6 @@
 namespace SugiPHP\Auth2;
 
 use SugiPHP\Auth2\Gateway\LoginGatewayInterface as LoginGateway;
-use SugiPHP\Auth2\Validator\ValidatorInterface as Validator;
 use SugiPHP\Auth2\Exception\GeneralException;
 use InvalidArgumentException;
 use UnexpectedValueException;
@@ -27,16 +26,9 @@ class Login
      */
     private $gateway;
 
-    /**
-     * @var Instance of ValidatorInterface
-     */
-    private $validator;
-
-
-    public function __construct(LoginGateway $gateway, Validator $validator)
+    public function __construct(LoginGateway $gateway)
     {
         $this->gateway = $gateway;
-        $this->validator = $validator;
     }
 
     /**

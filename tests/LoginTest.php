@@ -8,7 +8,6 @@
 namespace SugiPHP\Auth2\Tests;
 
 use SugiPHP\Auth2\Gateway\MemoryGateway as Gateway;
-use SugiPHP\Auth2\Validator\Validator;
 use SugiPHP\Auth2\Exception\GeneralException;
 use SugiPHP\Auth2\Login;
 use InvalidArgumentException;
@@ -32,7 +31,7 @@ class LoginTest extends \PHPUnit_Framework_TestCase
             $row["password"] = '$2y$10$2ZRoTUg0GXOKxYMVZ3orxu2ZloKN6NG3hugC7eiXHF/rmf6bG/GAu';
         }
         $this->gateway = new Gateway($data);
-        $this->login = new Login($this->gateway, new Validator());
+        $this->login = new Login($this->gateway);
     }
 
     public function testCreate()
