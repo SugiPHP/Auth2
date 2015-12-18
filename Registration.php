@@ -53,15 +53,14 @@ class Registration
     public function register($email, $username, $password, $password2)
     {
         $email = mb_strtolower($email, "UTF-8");
-        // checks email addresses and throws InvalidArgumentException on error
-        $this->validator->checkEmail($email);
 
-        // Check for password strength
-        $this->validator->checkPassStrength($password);
-        // Check passwords match
+        // checks email addresses & username and throw InvalidArgumentException on error
+        $this->validator->checkEmail($email);
+        $this->validator->checkUsername($username);
+        // Check for password strength and throw InvalidArgumentException on error
+        $this->validator->checkPassword($password);
+        // Check passwords match and throw InvalidArgumentException on error
         $this->validator->checkPasswordConfirmation($password, $password2);
-        // crypt password
-        $passwordHash = $this->cryptSecret($password);
 
         // check email is unique
         if ($this->gateway->getByEmail($email)) {
@@ -74,6 +73,9 @@ class Registration
             $this->log("debug", "Cannot register user: Username $username exists");
             throw new GeneralException("Има регистриран потребител с това потребителско име");
         }
+
+        // crypt password
+        $passwordHash = $this->cryptSecret($password);
 
         // insert in the DB and get new user's ID or some other data that will be returned
         if (!$id = $this->gateway->add($email, $username, static::STATE_INACTIVE, $passwordHash)) {
