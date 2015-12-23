@@ -10,6 +10,7 @@ namespace SugiPHP\Auth2;
 use SugiPHP\Auth2\Gateway\RegistrationGatewayInterface as RegistrationGateway;
 use SugiPHP\Auth2\Validator\ValidatorInterface as Validator;
 use SugiPHP\Auth2\Exception\GeneralException;
+use SugiPHP\Auth2\User\UserInterface;
 use Psr\Log\LoggerInterface as Logger;
 use InvalidArgumentException;
 use UnexpectedValueException;
@@ -78,7 +79,7 @@ class Registration
         $passwordHash = $this->cryptSecret($password);
 
         // insert in the DB and get new user's ID or some other data that will be returned
-        if (!$id = $this->gateway->add($email, $username, static::STATE_INACTIVE, $passwordHash)) {
+        if (!$id = $this->gateway->add($email, $username, UserInterface::STATE_INACTIVE, $passwordHash)) {
             $this->log("error", "Error while inserting user in the DB $email");
             throw new GeneralException("Грешка при създаване на акаунт");
         }
@@ -87,7 +88,7 @@ class Registration
         $token = sha1($passwordHash . $email);
 
         // return token for account activation via e-mail
-        return array("email" => $email, "state" => static::STATE_INACTIVE, "token" => $token, "id" => $id);
+        return array("email" => $email, "state" => UserInterface::STATE_INACTIVE, "token" => $token, "id" => $id);
     }
 
     /**

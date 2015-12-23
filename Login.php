@@ -9,18 +9,12 @@ namespace SugiPHP\Auth2;
 
 use SugiPHP\Auth2\Gateway\LoginGatewayInterface as LoginGateway;
 use SugiPHP\Auth2\Exception\GeneralException;
+use SugiPHP\Auth2\User\UserInterface;
 use InvalidArgumentException;
 use UnexpectedValueException;
 
 class Login
 {
-    /*
-     * User States
-     */
-    const STATE_ACTIVE   = 1;
-    const STATE_INACTIVE = 2;
-    const STATE_BLOCKED  = 3;
-
     /**
      * @var Instance of LoginGatewayInterface
      */
@@ -95,17 +89,17 @@ class Login
      */
     private function checkState($state)
     {
-        if (static::STATE_INACTIVE == $state) {
+        if (UserInterface::STATE_INACTIVE == $state) {
             // Before login you have to confirm your email address
             throw new GeneralException("Моля потвърдете регистрацията си");
         }
 
-        if (static::STATE_BLOCKED == $state) {
+        if (UserInterface::STATE_BLOCKED == $state) {
             // User account is blocked
             throw new GeneralException("Вашият потребителски акаунт е блокиран");
         }
 
-        if (static::STATE_ACTIVE != $state) {
+        if (UserInterface::STATE_ACTIVE != $state) {
             throw new UnexpectedValueException("Unknown user state. Expected 1-3. Got {$state}");
         }
     }
