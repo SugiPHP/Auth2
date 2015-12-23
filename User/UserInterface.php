@@ -34,7 +34,7 @@ interface UserInterface
     /**
      * Returns the encoded password.
      *
-     * @return string
+     * @return string|null
      */
     public function getPassword();
 
