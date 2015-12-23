@@ -26,7 +26,7 @@ class User implements UserInterface
             throw new InvalidArgumentException("The username cannot be empty");
         }
 
-        if (!in_array($sate, [UserInterface::STATE_ACTIVE, UserInterface::STATE_INACTIVE, UserInterface::STATE_BLOCKED])) {
+        if (!in_array($state, [UserInterface::STATE_ACTIVE, UserInterface::STATE_INACTIVE, UserInterface::STATE_BLOCKED])) {
             throw new InvalidArgumentException("Unknown user state");
         }
 
