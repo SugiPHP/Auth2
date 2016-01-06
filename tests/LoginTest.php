@@ -7,6 +7,7 @@
 
 namespace SugiPHP\Auth2\Tests;
 
+use SugiPHP\Auth2\User\UserMapper;
 use SugiPHP\Auth2\Gateway\MemoryGateway as Gateway;
 use SugiPHP\Auth2\Exception\GeneralException;
 use SugiPHP\Auth2\Login;
@@ -30,7 +31,7 @@ class LoginTest extends \PHPUnit_Framework_TestCase
             // password is demo
             $row["password"] = '$2y$10$2ZRoTUg0GXOKxYMVZ3orxu2ZloKN6NG3hugC7eiXHF/rmf6bG/GAu';
         }
-        $this->gateway = new Gateway($data);
+        $this->gateway = new Gateway(new UserMapper(), $data);
         $this->login = new Login($this->gateway);
     }
 
@@ -42,21 +43,19 @@ class LoginTest extends \PHPUnit_Framework_TestCase
     public function testLoginReturnsUserOnSuccess()
     {
         $userdata = self::DEMODATA[7];
-        // returns everything but password hash
-        unset($userdata["password"]);
-
         $user = $this->login->login("demo", "demo");
-        $this->assertEquals($userdata, $user);
+        $this->assertEquals($userdata["id"], $user->getId());
+        $this->assertEquals($userdata["username"], $user->getUsername());
+        $this->assertEquals($userdata["email"], $user->getEmail());
     }
 
     public function testLoginWithEmail()
     {
         $userdata = self::DEMODATA[7];
-        // returns everything but password hash
-        unset($userdata["password"]);
-
         $user = $this->login->login("demo@example.com", "demo");
-        $this->assertEquals($userdata, $user);
+        $this->assertEquals($userdata["id"], $user->getId());
+        $this->assertEquals($userdata["username"], $user->getUsername());
+        $this->assertEquals($userdata["email"], $user->getEmail());
     }
 
     /**

@@ -7,6 +7,7 @@
 
 namespace SugiPHP\Auth2\Gateway;
 
+use SugiPHP\Auth2\User\UserMapperInterface;
 use PDO;
 
 class PDOGateway implements
@@ -17,12 +18,18 @@ class PDOGateway implements
     private $tableUsersFields = "id, username, email, password, state, reg_date, pass_change_date";
 
     /**
+     * UserMapper Object
+     */
+    private $mapper;
+
+    /**
      * PDO handler
      */
     private $db;
 
-    public function __construct(PDO $db)
+    public function __construct(UserMapperInterface $mapper, PDO $db)
     {
+        $this->mapper = $mapper;
         $this->db = $db;
     }
 
@@ -34,9 +41,8 @@ class PDOGateway implements
         $sql = "SELECT {$this->tableUsersFields} FROM {$this->tableUsers} WHERE id = :id";
         $sth = $this->db->prepare($sql);
         $sth->bindValue("id", (int) $loginId, PDO::PARAM_INT);
-        $sth->execute();
 
-        return $sth->fetch(PDO::FETCH_ASSOC);
+        return $this->map($sth);
     }
 
     /**
@@ -47,9 +53,8 @@ class PDOGateway implements
         $sql = "SELECT {$this->tableUsersFields} FROM {$this->tableUsers} WHERE LOWER(email) = LOWER(:email)";
         $sth = $this->db->prepare($sql);
         $sth->bindValue("email", $email, PDO::PARAM_STR);
-        $sth->execute();
 
-        return $sth->fetch(PDO::FETCH_ASSOC);
+        return $this->map($sth);
     }
 
     /**
@@ -60,9 +65,8 @@ class PDOGateway implements
         $sql = "SELECT {$this->tableUsersFields} FROM {$this->tableUsers} WHERE LOWER(username) = LOWER(:username)";
         $sth = $this->db->prepare($sql);
         $sth->bindValue("username", $username, PDO::PARAM_STR);
-        $sth->execute();
 
-        return $sth->fetch(PDO::FETCH_ASSOC);
+        return $this->map($sth);
     }
 
     /**
@@ -100,5 +104,14 @@ class PDOGateway implements
         $sth->execute();
 
         return (bool) $sth->rowCount();
+    }
+
+    private function map($sth)
+    {
+        if (!$sth->execute() || !$row = $sth->fetch(PDO::FETCH_ASSOC)) {
+            return false;
+        }
+
+        return $this->mapper->factory($row);
     }
 }

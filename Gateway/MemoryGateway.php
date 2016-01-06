@@ -7,16 +7,23 @@
 
 namespace SugiPHP\Auth2\Gateway;
 
+use SugiPHP\Auth2\User\UserMapperInterface;
 use PDO;
 
 class MemoryGateway implements
     LoginGatewayInterface,
     RegistrationGatewayInterface
 {
+    /**
+     * UserMapper Object
+     */
+    private $mapper;
+
     private $storage;
 
-    public function __construct(array $storage = [])
+    public function __construct(UserMapperInterface $mapper, array $storage = [])
     {
+        $this->mapper = $mapper;
         $this->storage = $storage;
     }
 
@@ -25,7 +32,7 @@ class MemoryGateway implements
      */
     public function getById($loginId)
     {
-        return (isset($this->storage[$loginId])) ? $this->storage[$loginId] : false;
+        return (isset($this->storage[$loginId])) ? $this->mapper->factory($this->storage[$loginId]) : false;
     }
 
     /**
@@ -79,7 +86,7 @@ class MemoryGateway implements
     {
         foreach ($this->storage as $row) {
             if ($value == $row[$key]) {
-                return $row;
+                return $this->mapper->factory($row);
             }
         }
 

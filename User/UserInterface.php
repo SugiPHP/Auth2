@@ -32,6 +32,13 @@ interface UserInterface
     public function getUsername();
 
     /**
+     * Returns user's email.
+     *
+     * @return string
+     */
+    public function getEmail();
+
+    /**
      * Returns the encoded password.
      *
      * @return string|null

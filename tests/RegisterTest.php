@@ -7,6 +7,7 @@
 
 namespace SugiPHP\Auth2\Tests;
 
+use SugiPHP\Auth2\User\UserMapper;
 use SugiPHP\Auth2\Gateway\MemoryGateway as Gateway;
 use SugiPHP\Auth2\Exception\GeneralException;
 use SugiPHP\Auth2\Validator\Validator;
@@ -27,7 +28,7 @@ class RegisterTest extends \PHPUnit_Framework_TestCase
     public function setUp()
     {
         $data = self::DEMODATA;
-        $this->gateway = new Gateway($data);
+        $this->gateway = new Gateway(new UserMapper(), $data);
         $this->registration = new Registration($this->gateway, new Validator());
     }
 

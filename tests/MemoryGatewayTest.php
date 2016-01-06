@@ -7,6 +7,7 @@
 
 namespace SugiPHP\Auth2\Tests;
 
+use SugiPHP\Auth2\User\UserMapper;
 use SugiPHP\Auth2\Gateway\MemoryGateway as Gateway;
 use SugiPHP\Auth2\Gateway\LoginGatewayInterface;
 use SugiPHP\Auth2\Gateway\RegistrationGatewayInterface;
@@ -23,7 +24,8 @@ class MemoryGatewayTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $this->gateway = new Gateway(self::DEMODATA);
+        $mapper = new UserMapper();
+        $this->gateway = new Gateway($mapper, self::DEMODATA);
     }
 
     public function testGatewayImplementsLoginGatewayInterface()
@@ -41,8 +43,8 @@ class MemoryGatewayTest extends \PHPUnit_Framework_TestCase
      */
     public function testGetById()
     {
-        $row = $this->gateway->getById(7);
-        $this->assertEquals(7, $row["id"]);
+        $user = $this->gateway->getById(7);
+        $this->assertEquals(7, $user->getId());
     }
 
     /**
@@ -50,12 +52,13 @@ class MemoryGatewayTest extends \PHPUnit_Framework_TestCase
      */
     public function testGetByIdReturnsData()
     {
-        $row = $this->gateway->getById(7);
-        $this->assertEquals(7, $row["id"]);
-        $this->assertEquals('demo', $row["username"]);
-        $this->assertEquals('demo@example.com', $row["email"]);
-        $this->assertEquals(1, $row["state"]);
-        $this->assertTrue(isset($row["password"]));
+        $user = $this->gateway->getById(7);
+        $this->assertEquals(7, $user->getId());
+        $this->assertEquals('demo', $user->getUsername());
+        $this->assertEquals('demo@example.com', $user->getEmail());
+        $this->assertEquals(1, $user->getState());
+        $p = $user->getPassword();
+        $this->assertTrue(isset($p));
     }
 
     /**
@@ -63,8 +66,8 @@ class MemoryGatewayTest extends \PHPUnit_Framework_TestCase
      */
     public function testGetByIdReturnsEmptyIfUserNotFound()
     {
-        $row = $this->gateway->getById(99);
-        $this->assertEmpty($row);
+        $user = $this->gateway->getById(99);
+        $this->assertEmpty($user);
     }
 
     /**
@@ -72,8 +75,8 @@ class MemoryGatewayTest extends \PHPUnit_Framework_TestCase
      */
     public function testGetByUsername()
     {
-        $row = $this->gateway->getByUsername("demo");
-        $this->assertEquals(7, $row["id"]);
+        $user = $this->gateway->getByUsername("demo");
+        $this->assertEquals(7, $user->getId());
     }
 
     /**
@@ -81,8 +84,8 @@ class MemoryGatewayTest extends \PHPUnit_Framework_TestCase
      */
     public function testGetByUsernameReturnsEmptyIfUserNotFound()
     {
-        $row = $this->gateway->getByUsername("nosuchuser");
-        $this->assertEmpty($row);
+        $user = $this->gateway->getByUsername("nosuchuser");
+        $this->assertEmpty($user);
     }
 
     /**
@@ -90,8 +93,8 @@ class MemoryGatewayTest extends \PHPUnit_Framework_TestCase
      */
     public function testGetByEmail()
     {
-        $row = $this->gateway->getByEmail("demo@example.com");
-        $this->assertEquals(7, $row["id"]);
+        $user = $this->gateway->getByEmail("demo@example.com");
+        $this->assertEquals(7, $user->getId());
     }
 
     /**
@@ -99,8 +102,8 @@ class MemoryGatewayTest extends \PHPUnit_Framework_TestCase
      */
     public function testGetByEmailReturnsEmptyIfUserNotFound()
     {
-        $row = $this->gateway->getByUsername("no-reply@example.com");
-        $this->assertEmpty($row);
+        $user = $this->gateway->getByUsername("no-reply@example.com");
+        $this->assertEmpty($user);
     }
 
     /**
@@ -119,11 +122,11 @@ class MemoryGatewayTest extends \PHPUnit_Framework_TestCase
     public function testAddInsertsProperData()
     {
         $id = $this->gateway->add("new@user.mail", "newusername", 2, "");
-        $row = $this->gateway->getById($id);
-        $this->assertEquals($id, $row["id"]);
-        $this->assertEquals("new@user.mail", $row["email"]);
-        $this->assertEquals("newusername", $row["username"]);
-        $this->assertEquals(2, $row["state"]);
+        $user = $this->gateway->getById($id);
+        $this->assertEquals($id, $user->getId());
+        $this->assertEquals("new@user.mail", $user->getEmail());
+        $this->assertEquals("newusername", $user->getUsername());
+        $this->assertEquals(2, $user->getState());
     }
 
     /**
@@ -131,12 +134,12 @@ class MemoryGatewayTest extends \PHPUnit_Framework_TestCase
      */
     public function testUpdateState()
     {
-        $row = $this->gateway->getById(7);
-        $oldstate = $row["state"];
+        $user = $this->gateway->getById(7);
+        $oldstate = $user->getState();
 
         $this->gateway->updateState(7, $oldstate + 1);
-        $row = $this->gateway->getById(7);
-        $newstate = $row["state"];
+        $user = $this->gateway->getById(7);
+        $newstate = $user->getState();
         $this->assertEquals($oldstate + 1, $newstate);
     }
 }

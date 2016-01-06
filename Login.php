@@ -68,16 +68,17 @@ class Login
             }
         }
 
-        $this->checkState($user["state"]);
+        $this->checkState($user->getState());
 
         // check password
-        if (!$this->checkSecret($password, $user["password"])) {
+        if (!$this->checkSecret($password, $user->getPassword())) {
             throw new GeneralException($loginFailedMessage);
         }
 
         // removing password from the return. If you really want to receive a
         // password you can add additional column with a different name
-        unset($user["password"]);
+        // TODO
+        // unset($user["password"]);
 
         return $user;
     }

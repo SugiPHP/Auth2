@@ -13,10 +13,11 @@ class User implements UserInterface
 {
     private $id;
     private $username;
+    private $email;
     private $password;
     private $state;
 
-    public function __construct($id, $username, $state, $password)
+    public function __construct($id, $username, $email, $state, $password)
     {
         if (empty($id)) {
             throw new InvalidArgumentException("The user ID cannot be empty");
@@ -32,6 +33,7 @@ class User implements UserInterface
 
         $this->id = $id;
         $this->username = $username;
+        $this->email = $email;
         $this->password = $password;
         $this->state = $state;
     }
@@ -55,6 +57,16 @@ class User implements UserInterface
     public function getUsername()
     {
         return $this->username;
+    }
+
+    /**
+     * Returns user's email.
+     *
+     * @return string
+     */
+    public function getEmail()
+    {
+        return $this->email;
     }
 
     /**
