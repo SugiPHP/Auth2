@@ -7,13 +7,12 @@
 
 namespace SugiPHP\Auth2\Tests;
 
-use SugiPHP\Auth2\User\UserMapper;
 use SugiPHP\Auth2\Gateway\PDOGateway as Gateway;
 use SugiPHP\Auth2\Gateway\LoginGatewayInterface;
 use SugiPHP\Auth2\Gateway\RegistrationGatewayInterface;
 use PDO;
 
-class PDOGatewayTest extends \PHPUnit_Framework_TestCase
+class PDOGatewayWithoutMapperTest extends \PHPUnit_Framework_TestCase
 {
     const SCHEMA = "CREATE TABLE auth2 (
         id INTEGER NOT NULL PRIMARY KEY,
@@ -37,7 +36,7 @@ class PDOGatewayTest extends \PHPUnit_Framework_TestCase
         $db->exec(self::SCHEMA);
         $db->exec(self::DEMODATA);
 
-        $this->gateway = new Gateway($db, new UserMapper());
+        $this->gateway = new Gateway($db);
     }
 
     public function testGatewayImplementsLoginGatewayInterface()
@@ -55,8 +54,8 @@ class PDOGatewayTest extends \PHPUnit_Framework_TestCase
      */
     public function testGetById()
     {
-        $user = $this->gateway->getById(7);
-        $this->assertEquals(7, $user->getId());
+        $row = $this->gateway->getById(7);
+        $this->assertEquals(7, $row["id"]);
     }
 
     /**
@@ -64,15 +63,14 @@ class PDOGatewayTest extends \PHPUnit_Framework_TestCase
      */
     public function testGetByIdReturnsData()
     {
-        $user = $this->gateway->getById(7);
-        $this->assertEquals(7, $user->getId());
-        $this->assertEquals('demo', $user->getUsername());
-        $this->assertEquals('demo@example.com', $user->getEmail());
-        $this->assertEquals(1, $user->getState());
-        // $this->assertNotEmpty($user["reg_date"]);
-        // $this->assertNotEmpty($user["pass_change_date"]);
-        $p = $user->getPassword();
-        $this->assertTrue(isset($p));
+        $row = $this->gateway->getById(7);
+        $this->assertEquals(7, $row["id"]);
+        $this->assertEquals('demo', $row["username"]);
+        $this->assertEquals('demo@example.com', $row["email"]);
+        $this->assertEquals(1, $row["state"]);
+        $this->assertNotEmpty($row["reg_date"]);
+        $this->assertNotEmpty($row["pass_change_date"]);
+        $this->assertTrue(isset($row["password"]));
     }
 
     /**
@@ -80,8 +78,8 @@ class PDOGatewayTest extends \PHPUnit_Framework_TestCase
      */
     public function testGetByIdReturnsEmptyIfUserNotFound()
     {
-        $user = $this->gateway->getById(99);
-        $this->assertEmpty($user);
+        $row = $this->gateway->getById(99);
+        $this->assertEmpty($row);
     }
 
     /**
@@ -89,8 +87,8 @@ class PDOGatewayTest extends \PHPUnit_Framework_TestCase
      */
     public function testGetByUsername()
     {
-        $user = $this->gateway->getByUsername("demo");
-        $this->assertEquals(7, $user->getId());
+        $row = $this->gateway->getByUsername("demo");
+        $this->assertEquals(7, $row["id"]);
     }
 
     /**
@@ -98,8 +96,8 @@ class PDOGatewayTest extends \PHPUnit_Framework_TestCase
      */
     public function testGetByUsernameReturnsEmptyIfUserNotFound()
     {
-        $user = $this->gateway->getByUsername("nosuchuser");
-        $this->assertEmpty($user);
+        $row = $this->gateway->getByUsername("nosuchuser");
+        $this->assertEmpty($row);
     }
 
     /**
@@ -107,8 +105,8 @@ class PDOGatewayTest extends \PHPUnit_Framework_TestCase
      */
     public function testGetByEmail()
     {
-        $user = $this->gateway->getByEmail("demo@example.com");
-        $this->assertEquals(7, $user->getId());
+        $row = $this->gateway->getByEmail("demo@example.com");
+        $this->assertEquals(7, $row["id"]);
     }
 
     /**
@@ -116,8 +114,8 @@ class PDOGatewayTest extends \PHPUnit_Framework_TestCase
      */
     public function testGetByEmailReturnsEmptyIfUserNotFound()
     {
-        $user = $this->gateway->getByUsername("no-reply@example.com");
-        $this->assertEmpty($user);
+        $row = $this->gateway->getByUsername("no-reply@example.com");
+        $this->assertEmpty($row);
     }
 
     /**
@@ -136,13 +134,13 @@ class PDOGatewayTest extends \PHPUnit_Framework_TestCase
     public function testAddInsertsProperData()
     {
         $id = $this->gateway->add("new@user.mail", "newusername", 2, "");
-        $user = $this->gateway->getById($id);
-        $this->assertEquals($id, $user->getId());
-        $this->assertEquals("new@user.mail", $user->getEmail());
-        $this->assertEquals("newusername", $user->getUsername());
-        $this->assertEquals(2, $user->getState());
-        // $this->assertNotEmpty($user["reg_date"]);
-        // $this->assertNotEmpty($user["pass_change_date"]);
+        $row = $this->gateway->getById($id);
+        $this->assertEquals($id, $row["id"]);
+        $this->assertEquals("new@user.mail", $row["email"]);
+        $this->assertEquals("newusername", $row["username"]);
+        $this->assertEquals(2, $row["state"]);
+        $this->assertNotEmpty($row["reg_date"]);
+        $this->assertNotEmpty($row["pass_change_date"]);
     }
 
     /**
@@ -150,12 +148,12 @@ class PDOGatewayTest extends \PHPUnit_Framework_TestCase
      */
     public function testUpdateState()
     {
-        $user = $this->gateway->getById(7);
-        $oldstate = $user->getState();
+        $row = $this->gateway->getById(7);
+        $oldstate = $row["state"];
 
         $this->gateway->updateState(7, $oldstate + 1);
-        $user = $this->gateway->getById(7);
-        $newstate = $user->getState();
+        $row = $this->gateway->getById(7);
+        $newstate = $row["state"];
         $this->assertEquals($oldstate + 1, $newstate);
     }
 }
