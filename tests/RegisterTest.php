@@ -28,7 +28,7 @@ class RegisterTest extends \PHPUnit_Framework_TestCase
     public function setUp()
     {
         $data = self::DEMODATA;
-        $this->gateway = new Gateway(new UserMapper(), $data);
+        $this->gateway = new Gateway($data, new UserMapper());
         $this->registration = new Registration($this->gateway, new Validator());
     }
 

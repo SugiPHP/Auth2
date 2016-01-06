@@ -27,7 +27,7 @@ class PDOGateway implements
      */
     private $db;
 
-    public function __construct(UserMapperInterface $mapper, PDO $db)
+    public function __construct(PDO $db, UserMapperInterface $mapper = null)
     {
         $this->mapper = $mapper;
         $this->db = $db;
@@ -112,6 +112,6 @@ class PDOGateway implements
             return false;
         }
 
-        return $this->mapper->factory($row);
+        return ($this->mapper) ? $this->mapper->factory($row) : $row;
     }
 }

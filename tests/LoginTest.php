@@ -31,7 +31,7 @@ class LoginTest extends \PHPUnit_Framework_TestCase
             // password is demo
             $row["password"] = '$2y$10$2ZRoTUg0GXOKxYMVZ3orxu2ZloKN6NG3hugC7eiXHF/rmf6bG/GAu';
         }
-        $this->gateway = new Gateway(new UserMapper(), $data);
+        $this->gateway = new Gateway($data, new UserMapper());
         $this->login = new Login($this->gateway);
     }
 
