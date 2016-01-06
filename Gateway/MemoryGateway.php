@@ -12,7 +12,8 @@ use PDO;
 
 class MemoryGateway implements
     LoginGatewayInterface,
-    RegistrationGatewayInterface
+    RegistrationGatewayInterface,
+    ActivationGatewayInterface
 {
     /**
      * UserMapper Object
@@ -70,7 +71,7 @@ class MemoryGateway implements
     }
 
     /**
-     * @see RegistrationGatewayInterface::updateState()
+     * @see ActivationGatewayInterface::updateState()
      */
     public function updateState($id, $state)
     {

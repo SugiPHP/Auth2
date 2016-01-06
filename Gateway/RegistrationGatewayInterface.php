@@ -20,12 +20,4 @@ interface RegistrationGatewayInterface extends LoginGatewayInterface
      * @return FALSE on error. Any other result will be returned in "data" key
      */
     public function add($email, $username, $state, $passwordHash);
-
-    /**
-     * Changes user state.
-     *
-     * @param integer $id
-     * @param integer $state
-     */
-    public function updateState($id, $state);
 }

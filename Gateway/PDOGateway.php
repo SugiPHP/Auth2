@@ -12,7 +12,8 @@ use PDO;
 
 class PDOGateway implements
     LoginGatewayInterface,
-    RegistrationGatewayInterface
+    RegistrationGatewayInterface,
+    ActivationGatewayInterface
 {
     private $tableUsers = "auth2";
     private $tableUsersFields = "id, username, email, password, state, reg_date, pass_change_date";
@@ -92,7 +93,7 @@ class PDOGateway implements
     }
 
     /**
-     * @see RegistrationGatewayInterface::updateState()
+     * @see ActivationGatewayInterface::updateState()
      */
     public function updateState($id, $state)
     {
