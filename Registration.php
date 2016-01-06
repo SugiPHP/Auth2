@@ -88,7 +88,7 @@ class Registration
         $token = sha1($passwordHash . $email);
 
         // return token for account activation via e-mail
-        return array("email" => $email, "state" => UserInterface::STATE_INACTIVE, "token" => $token, "id" => $id);
+        return array("token" => $token, "id" => $id);
     }
 
     /**
