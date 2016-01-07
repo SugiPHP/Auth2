@@ -32,11 +32,10 @@ class Registration
      */
     private $logger;
 
-    public function __construct(RegistrationGateway $gateway, Validator $validator, Logger $logger = null)
+    public function __construct(RegistrationGateway $gateway, Validator $validator)
     {
         $this->gateway = $gateway;
         $this->validator = $validator;
-        $this->logger = $logger;
     }
 
     /**
@@ -92,14 +91,13 @@ class Registration
     }
 
     /**
-     * Generates a hash.
+     * Attach a logger for debugging
      *
-     * @param string $secret
-     * @return string
+     * @param Logger $logger
      */
-    private function cryptSecret($secret)
+    public function setLogger(Logger $logger)
     {
-        return password_hash($secret, PASSWORD_BCRYPT);
+        $this->logger = $logger;
     }
 
     /**
@@ -113,5 +111,16 @@ class Registration
         if ($this->logger) {
             $this->logger->log($level, $message);
         }
+    }
+
+    /**
+     * Generates a hash.
+     *
+     * @param string $secret
+     * @return string
+     */
+    private function cryptSecret($secret)
+    {
+        return password_hash($secret, PASSWORD_BCRYPT);
     }
 }

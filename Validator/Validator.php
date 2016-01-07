@@ -17,11 +17,6 @@ class Validator implements ValidatorInterface
      */
     private $logger;
 
-    public function __construct(Logger $logger = null)
-    {
-        $this->logger = $logger;
-    }
-
     /**
      * @see ValidatorInterface::checkEmail()
      *
@@ -126,6 +121,16 @@ class Validator implements ValidatorInterface
         if ($password2 !== $password) {
             throw new InvalidArgumentException("Въведените пароли се различават");
         }
+    }
+
+    /**
+     * Attach a logger for debugging
+     *
+     * @param Logger $logger
+     */
+    public function setLogger(Logger $logger)
+    {
+        $this->logger = $logger;
     }
 
     /**

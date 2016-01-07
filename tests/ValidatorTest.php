@@ -14,14 +14,9 @@ use InvalidArgumentException;
 
 class ValidatorTest extends \PHPUnit_Framework_TestCase
 {
-    public function testCreateWithoutLogger()
+    public function testCreate()
     {
         $this->assertTrue(new Validator() instanceof ValidatorInterface);
-    }
-
-    public function testCreateWithLogger()
-    {
-        $this->assertTrue(new Validator(new NullLogger()) instanceof ValidatorInterface);
     }
 
     /**
