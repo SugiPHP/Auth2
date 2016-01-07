@@ -85,8 +85,6 @@ class Login
 
     /**
      * Checks current user state and throws exception if it is not active
-     *
-     * @param integer $state
      */
     private function checkState($state)
     {
