@@ -15,7 +15,7 @@ class NativeSessionStorageTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        @session_start();   
+        @session_start();
     }
 
     public function testSetAndGet()
@@ -26,7 +26,7 @@ class NativeSessionStorageTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(['boo' => 'foo'], $storageSession->get());
 
         // Not equals
-        $storageSession = new NativeSessionStorage('other_key');
+        $storageSession->setSessionKey('other_key');
         $this->assertNotEquals(['boo' => 'foo'], $storageSession->get());
     }
 
@@ -42,10 +42,10 @@ class NativeSessionStorageTest extends \PHPUnit_Framework_TestCase
 
     public function testHas()
     {
-        $storageSession = new NativeSessionStorage('key');
+        $storageSession = new NativeSessionStorage();
+        $this->assertFalse($storageSession->has());
         // Need to set some data to has...
-        $storageSession->set(['boo' => 'foo']);
+        $storageSession->set('boo');
         $this->assertTrue($storageSession->has());
     }
-
 }

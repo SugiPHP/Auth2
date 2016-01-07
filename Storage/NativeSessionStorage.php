@@ -12,14 +12,7 @@ namespace SugiPHP\Auth2\Storage;
  */
 class NativeSessionStorage implements StorageInterface
 {
-    const SESSION_KEY = "SugiPHP-Auth2-User";
-
-    private $sessionKey;
-
-    public function __construct($sessionKey = self::SESSION_KEY)
-    {
-        $this->sessionKey = $sessionKey;
-    }
+    private $sessionKey = "SugiPHP-Auth2-User";
 
     public function get()
     {
@@ -53,6 +46,16 @@ class NativeSessionStorage implements StorageInterface
         $this->startSession();
 
         return isset($_SESSION[$this->sessionKey]);
+    }
+
+    public function getSessionKey()
+    {
+        return $this->sessionKey;
+    }
+
+    public function setSessionKey($value)
+    {
+        $this->sessionKey = $value;
     }
 
     private function startSession()
