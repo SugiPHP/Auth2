@@ -12,20 +12,16 @@ use SugiPHP\Auth2\TokenGenerator\TokenGeneratorInterface;
 
 class TokenGeneratorTest extends \PHPUnit_Framework_TestCase
 {
-    public function testCreateWithoutConfig()
+    public function testCreate()
     {
         $this->assertTrue(new TokenGenerator() instanceof TokenGeneratorInterface);
-    }
-
-    public function testCreateWithConfig()
-    {
-        $this->assertTrue(new TokenGenerator(100) instanceof TokenGeneratorInterface);
     }
 
     public function testCreateWithLengthChangesTokenLength()
     {
         $len = 100;
-        $generator = new TokenGenerator($len);
+        $generator = new TokenGenerator();
+        $generator->setTokenLenght($len);
         $this->assertEquals($len, $generator->getTokenLenght());
     }
 
@@ -47,7 +43,8 @@ class TokenGeneratorTest extends \PHPUnit_Framework_TestCase
     public function testGenerateReturnsTokensWithSpecifiedTokenLength()
     {
         $len = 50;
-        $generator = new TokenGenerator($len);
+        $generator = new TokenGenerator();
+        $generator->setTokenLenght($len);
         $token = $generator->generateToken();
         $this->assertEquals($len, strlen($token));
     }

@@ -9,12 +9,7 @@ namespace SugiPHP\Auth2\TokenGenerator;
 
 class TokenGenerator implements TokenGeneratorInterface
 {
-    private $tokenLength;
-
-    public function __construct($tokenLength = 128)
-    {
-        $this->tokenLength = $tokenLength;
-    }
+    private $tokenLength = 128;
 
     /**
      * @see TokenGeneratorInterface::generateToken()
@@ -37,6 +32,11 @@ class TokenGenerator implements TokenGeneratorInterface
         $code = substr($code, mt_rand(0, strlen($code) - $len - 1), $len);
 
         return $code;
+    }
+
+    public function setTokenLenght($tokenLength)
+    {
+        $this->tokenLength = $tokenLength;
     }
 
     public function getTokenLenght()
