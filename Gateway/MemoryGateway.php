@@ -96,9 +96,9 @@ class MemoryGateway implements
     /**
      * @see TokenGatewayInterface::storeToken()
      */
-    public function storeToken($token, UserInterface $user)
+    public function storeToken($token, $userId)
     {
-        $this->tokens[$token] = $user;
+        $this->tokens[$token] = $userId;
     }
 
     /**

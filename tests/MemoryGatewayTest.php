@@ -145,32 +145,31 @@ class MemoryGatewayTest extends \PHPUnit_Framework_TestCase
     public function testFindTokenReturnsFalseIfTokenNotFound()
     {
         $token = md5(mt_rand());
-        $user = $this->gateway->findToken($token);
-        $this->assertFalse($user);
+        $userId = $this->gateway->findToken($token);
+        $this->assertFalse($userId);
     }
 
     public function testFindTokenReturnsFalseIfTokenEmpty()
     {
         $token = "";
-        $user = $this->gateway->findToken($token);
-        $this->assertFalse($user);
+        $userId = $this->gateway->findToken($token);
+        $this->assertFalse($userId);
     }
 
     public function testStoreToken()
     {
-        $user = $this->gateway->getById(7);
+        $userId = 7;
         $token = md5(mt_rand());
-        $this->gateway->storeToken($token, $user);
-        $user2 = $this->gateway->findToken($token);
-        $this->assertEquals($user, $user2);
+        $this->gateway->storeToken($token, $userId);
+        $this->assertEquals($userId, $this->gateway->findToken($token));
     }
 
     public function testStoreMoreTokens()
     {
-        $user1 = $this->gateway->getById(1);
+        $user1 = 1;
         $token1 = md5(mt_rand());
         $token1more = md5(mt_rand());
-        $user7 = $this->gateway->getById(7);
+        $user7 = 7;
         $token7 = md5(mt_rand());
         $this->gateway->storeToken($token1, $user1);
         $this->gateway->storeToken($token7, $user7);

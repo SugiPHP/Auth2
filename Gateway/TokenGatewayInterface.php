@@ -16,7 +16,7 @@ interface TokenGatewayInterface
      *
      * @param string $token
      *
-     * @return mixed Returns FALSE if the token not found or User
+     * @return mixed Returns FALSE if the token not found or user's ID
      */
     public function findToken($token);
 
@@ -24,7 +24,7 @@ interface TokenGatewayInterface
      * Stores a token in the DB
      *
      * @param string $token
-     * @param UserInterface $user
+     * @param integer $userId
      */
-    public function storeToken($token, UserInterface $user);
+    public function storeToken($token, $userId);
 }

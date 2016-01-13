@@ -48,7 +48,7 @@ class RandomToken implements TokenInterface
         // extract only part of it
         $token = substr($token, mt_rand(0, strlen($token) - $len - 1), $len);
 
-        $this->gateway->storeToken($token, $user);
+        $this->gateway->storeToken($token, $user->getId());
 
         return $token;
     }
@@ -58,12 +58,12 @@ class RandomToken implements TokenInterface
      */
     public function checkToken(UserInterface $user, $token)
     {
-        $data = $this->gateway->findToken($token);
-        if (!$data) {
+        $userId = $this->gateway->findToken($token);
+        if (!$userId) {
             return false;
         }
 
-        return $user->getId() == $data->getId();
+        return $user->getId() == $userId;
     }
 
     public function setTokenLength($tokenLength)
