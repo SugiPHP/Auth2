@@ -61,7 +61,7 @@ class Activation
             return true;
         }
 
-        if (!$this->checkToken($token)) {
+        if (!$this->checkUserToken($user, $token)) {
             throw new GeneralException("Wrong activation token");
         }
 
@@ -71,7 +71,7 @@ class Activation
     /**
      * Checks current user state and throws exception if it is blocked
      *
-     * @param boolean
+     * @param boolean $state
      * @throws GeneralException if user is blocked
      */
     private function checkState($state)
@@ -93,13 +93,13 @@ class Activation
     }
 
     /**
-     * @todo implement the method
+     * Checks the user can use this token
      *
      * @param string $token
      *
      * @return boolean
      */
-    private function checkToken($token)
+    private function checkUserToken($user, $token)
     {
         return false;
     }

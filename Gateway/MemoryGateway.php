@@ -8,19 +8,29 @@
 namespace SugiPHP\Auth2\Gateway;
 
 use SugiPHP\Auth2\User\UserMapperInterface;
+use SugiPHP\Auth2\User\UserInterface;
 use PDO;
 
 class MemoryGateway implements
     LoginGatewayInterface,
     RegistrationGatewayInterface,
-    ActivationGatewayInterface
+    ActivationGatewayInterface,
+    TokenGatewayInterface
 {
     /**
-     * UserMapper Object
+     * @var UserMapper Object
      */
     private $mapper;
 
+    /**
+     * @var array User Data Storage
+     */
     private $storage;
+
+    /**
+     * @var array Token Storage
+     */
+    private $tokens;
 
     public function __construct(array $storage = [], UserMapperInterface $mapper = null)
     {
@@ -81,6 +91,22 @@ class MemoryGateway implements
 
         $this->storage[$id]["state"] = $state;
         return true;
+    }
+
+    /**
+     * @see TokenGatewayInterface::storeToken()
+     */
+    public function storeToken($token, UserInterface $user)
+    {
+        $this->tokens[$token] = $user;
+    }
+
+    /**
+     * @see TokenGatewayInterface::findToken()
+     */
+    public function findToken($token)
+    {
+        return (empty($this->tokens[$token])) ? false : $this->tokens[$token];
     }
 
     private function findByKey($key, $value)

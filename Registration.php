@@ -42,10 +42,11 @@ class Registration
      * User registration.
      *
      * @param string $email
+     * @param string $username
      * @param string $password
      * @param string $password2 Password confirmation
      *
-     * @return array User info
+     * @return integer User's ID
      *
      * @throws InvalidArgumentException
      * @throws GeneralException
@@ -83,11 +84,7 @@ class Registration
             throw new GeneralException("Грешка при създаване на акаунт");
         }
 
-        // creating unique token
-        $token = sha1($passwordHash . $email);
-
-        // return token for account activation via e-mail
-        return array("token" => $token, "id" => $id);
+        return $id;
     }
 
     /**
@@ -114,9 +111,10 @@ class Registration
     }
 
     /**
-     * Generates a hash.
+     * Generates a password hash
      *
      * @param string $secret
+     *
      * @return string
      */
     private function cryptSecret($secret)

@@ -14,7 +14,7 @@ use SugiPHP\Auth2\Validator\Validator;
 use SugiPHP\Auth2\Registration;
 use InvalidArgumentException;
 
-class RegisterTest extends \PHPUnit_Framework_TestCase
+class RegistrationTest extends \PHPUnit_Framework_TestCase
 {
     const PASS = "strongPassword12345&*(";
     const DEMODATA = [
