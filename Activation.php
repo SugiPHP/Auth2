@@ -8,6 +8,7 @@
 namespace SugiPHP\Auth2;
 
 use SugiPHP\Auth2\Gateway\ActivationGatewayInterface as ActivationGateway;
+use SugiPHP\Auth2\Token\TokenInterface;
 use SugiPHP\Auth2\Exception\GeneralException;
 use SugiPHP\Auth2\User\UserInterface;
 use InvalidArgumentException;
@@ -20,9 +21,15 @@ class Activation
      */
     private $gateway;
 
-    public function __construct(ActivationGateway $gateway)
+    /**
+     * @var Instance of TokenInterface
+     */
+    private $tokenGen;
+
+    public function __construct(ActivationGateway $gateway, TokenInterface $tokenGen)
     {
         $this->gateway = $gateway;
+        $this->tokenGen = $tokenGen;
     }
 
     /**
@@ -95,12 +102,13 @@ class Activation
     /**
      * Checks the user can use this token
      *
+     * @param UserInterface $user
      * @param string $token
      *
      * @return boolean
      */
-    private function checkUserToken($user, $token)
+    private function checkUserToken(UserInterface $user, $token)
     {
-        return false;
+        return $this->tokenGen->checkToken($user, $token);
     }
 }
