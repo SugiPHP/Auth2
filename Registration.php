@@ -12,8 +12,6 @@ use SugiPHP\Auth2\Validator\ValidatorInterface as Validator;
 use SugiPHP\Auth2\Exception\GeneralException;
 use SugiPHP\Auth2\User\UserInterface;
 use Psr\Log\LoggerInterface as Logger;
-use InvalidArgumentException;
-use UnexpectedValueException;
 
 class Registration
 {

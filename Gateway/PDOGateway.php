@@ -89,7 +89,12 @@ class PDOGateway implements
         $sth->bindValue("password", $passwordHash);
         $sth->execute();
 
-        return (int) (($pg) ? $sth->fetchColumn() : $this->db->lastInsertId());
+        $id = (int) (($pg) ? $sth->fetchColumn() : $this->db->lastInsertId());
+        if (!$id) {
+            return false;
+        }
+
+        return $this->getById($id);
     }
 
     /**

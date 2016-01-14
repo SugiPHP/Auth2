@@ -8,6 +8,7 @@
 namespace SugiPHP\Auth2\Tests;
 
 use SugiPHP\Auth2\User\UserMapper;
+use SugiPHP\Auth2\User\UserInterface;
 use SugiPHP\Auth2\Gateway\MemoryGateway as Gateway;
 use SugiPHP\Auth2\Gateway\LoginGatewayInterface;
 use SugiPHP\Auth2\Gateway\RegistrationGatewayInterface;
@@ -108,21 +109,20 @@ class MemoryGatewayTest extends \PHPUnit_Framework_TestCase
     /**
      * @depends testGatewayImplementsRegistrationGatewayInterface
      */
-    public function testAddReturnsId()
+    public function testAddReturnsUser()
     {
-        $id = $this->gateway->add("new@user.mail", "newusername", 2, "");
-        $this->assertGreaterThan(1, $id);
+        $user = $this->gateway->add("new@user.mail", "newusername", 2, "");
+        $this->assertTrue($user instanceof UserInterface);
     }
 
     /**
      * @depends testGatewayImplementsRegistrationGatewayInterface
-     * @depends testAddReturnsId
+     * @depends testAddReturnsUser
      */
     public function testAddInsertsProperData()
     {
-        $id = $this->gateway->add("new@user.mail", "newusername", 2, "");
-        $user = $this->gateway->getById($id);
-        $this->assertEquals($id, $user->getId());
+        $user = $this->gateway->add("new@user.mail", "newusername", 2, "");
+        $this->assertGreaterThan(0, $user->getId());
         $this->assertEquals("new@user.mail", $user->getEmail());
         $this->assertEquals("newusername", $user->getUsername());
         $this->assertEquals(2, $user->getState());

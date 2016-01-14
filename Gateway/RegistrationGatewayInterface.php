@@ -17,7 +17,7 @@ interface RegistrationGatewayInterface extends LoginGatewayInterface
      * @param integer $state
      * @param mixed $passwordHash
      *
-     * @return FALSE on error. Any other result will be returned in "data" key
+     * @return mixed User or FALSE on error.
      */
     public function add($email, $username, $state, $passwordHash);
 }

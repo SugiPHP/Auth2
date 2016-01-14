@@ -77,7 +77,7 @@ class MemoryGateway implements
             "password" => $password
         ];
 
-        return $id;
+        return $this->getById($id);
     }
 
     /**

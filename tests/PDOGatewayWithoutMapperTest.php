@@ -121,19 +121,20 @@ class PDOGatewayWithoutMapperTest extends \PHPUnit_Framework_TestCase
     /**
      * @depends testGatewayImplementsRegistrationGatewayInterface
      */
-    public function testAddReturnsId()
+    public function testAddReturnsArray()
     {
-        $id = $this->gateway->add("new@user.mail", "newusername", 2, "");
-        $this->assertGreaterThan(1, $id);
+        $arr = $this->gateway->add("new@user.mail", "newusername", 2, "");
+        $this->assertTrue(is_array($arr));
     }
 
     /**
      * @depends testGatewayImplementsRegistrationGatewayInterface
-     * @depends testAddReturnsId
+     * @depends testAddReturnsArray
      */
     public function testAddInsertsProperData()
     {
-        $id = $this->gateway->add("new@user.mail", "newusername", 2, "");
+        $user = $this->gateway->add("new@user.mail", "newusername", 2, "");
+        $id = $user["id"];
         $row = $this->gateway->getById($id);
         $this->assertEquals($id, $row["id"]);
         $this->assertEquals("new@user.mail", $row["email"]);
