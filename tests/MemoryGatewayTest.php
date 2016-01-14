@@ -164,6 +164,9 @@ class MemoryGatewayTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($userId, $this->gateway->findToken($token));
     }
 
+    /**
+     * @depends testStoreToken
+     */
     public function testStoreMoreTokens()
     {
         $user1 = 1;
@@ -177,5 +180,18 @@ class MemoryGatewayTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($user1, $this->gateway->findToken($token1));
         $this->assertEquals($user7, $this->gateway->findToken($token7));
         $this->assertEquals($user1, $this->gateway->findToken($token1more));
+    }
+
+    /**
+     * @depends testStoreToken
+     * @depends testFindTokenReturnsFalseIfTokenNotFound
+     */
+    public function testDeleteToken()
+    {
+        $userId = 7;
+        $token = md5(mt_rand());
+        $this->gateway->storeToken($token, $userId);
+        $this->gateway->deleteToken($token);
+        $this->assertFalse($this->gateway->findToken($token));
     }
 }

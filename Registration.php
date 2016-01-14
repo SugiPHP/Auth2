@@ -44,7 +44,7 @@ class Registration
      * @param string $password
      * @param string $password2 Password confirmation
      *
-     * @return integer User's ID
+     * @return User
      *
      * @throws InvalidArgumentException
      * @throws GeneralException
@@ -77,12 +77,12 @@ class Registration
         $passwordHash = $this->cryptSecret($password);
 
         // insert in the DB and get new user's ID or some other data that will be returned
-        if (!$id = $this->gateway->add($email, $username, UserInterface::STATE_INACTIVE, $passwordHash)) {
-            $this->log("error", "Error while inserting user in the DB $email");
+        if (!$user = $this->gateway->add($email, $username, UserInterface::STATE_INACTIVE, $passwordHash)) {
+            $this->log("error", "Error while inserting user in the DB {$username}<{$email}>");
             throw new GeneralException("Грешка при създаване на акаунт");
         }
 
-        return $id;
+        return $user;
     }
 
     /**

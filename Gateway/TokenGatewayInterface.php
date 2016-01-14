@@ -27,4 +27,11 @@ interface TokenGatewayInterface
      * @param integer $userId
      */
     public function storeToken($token, $userId);
+
+    /**
+     * Deletes a token from the database
+     *
+     * @param string $token
+     */
+    public function deleteToken($token);
 }

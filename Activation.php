@@ -65,6 +65,10 @@ class Activation
 
         // the user is already active
         if ($this->checkState($user->getState())) {
+            // If the state is already active it can be insecure to use
+            // the token for logins. The token might be old if it is not
+            // invalidated, or it is based on user's data (e.g. UserToken)
+            // So we SHOULD return true, instead of User Data
             return true;
         }
 
@@ -72,7 +76,13 @@ class Activation
             throw new GeneralException("Wrong activation token");
         }
 
-        return $this->gateway->updateState($user->getId(), UserInterface::STATE_ACTIVE);
+        if (!$this->gateway->updateState($user->getId(), UserInterface::STATE_ACTIVE)) {
+            throw new GeneralException("Error in activation process");
+        }
+
+        $this->invalidateUserToken($user, $token);
+
+        return $user;
     }
 
     /**
@@ -110,5 +120,10 @@ class Activation
     private function checkUserToken(UserInterface $user, $token)
     {
         return $this->tokenGen->checkToken($user, $token);
+    }
+
+    private function invalidateUserToken(UserInterface $user, $token)
+    {
+        return $this->tokenGen->invalidateToken($user, $token);
     }
 }

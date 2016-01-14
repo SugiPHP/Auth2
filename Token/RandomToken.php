@@ -66,6 +66,14 @@ class RandomToken implements TokenInterface
         return $user->getId() == $userId;
     }
 
+    /**
+     * @see TokenInterface::invalidateToken()
+     */
+    public function invalidateToken(UserInterface $user, $token)
+    {
+        $this->gateway->deleteToken($token);
+    }
+
     public function setTokenLength($tokenLength)
     {
         $this->tokenLength = $tokenLength;

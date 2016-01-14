@@ -27,6 +27,16 @@ class UserToken implements TokenInterface
         return $token === $this->createToken($user);
     }
 
+    /**
+     * @see TokenInterface::invalidateToken()
+     */
+    public function invalidateToken(UserInterface $user, $token)
+    {
+        // There is no need to invalidate the token, because it is based on user state and user's password
+        // User state is changed on activations, and passwords are changed on each pass change
+        return ;
+    }
+
     private function createToken(UserInterface $user)
     {
         $code = $user->getId() . $user->getPassword() . $user->getEmail() . $user->getState();

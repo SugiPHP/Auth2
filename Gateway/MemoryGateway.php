@@ -109,6 +109,14 @@ class MemoryGateway implements
         return (empty($this->tokens[$token])) ? false : $this->tokens[$token];
     }
 
+    /**
+     * @see TokenGatewayInterface::deleteToken()
+     */
+    public function deleteToken($token)
+    {
+        unset($this->tokens[$token]);
+    }
+
     private function findByKey($key, $value)
     {
         foreach ($this->storage as $row) {

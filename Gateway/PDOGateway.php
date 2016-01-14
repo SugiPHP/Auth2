@@ -87,10 +87,10 @@ class PDOGateway implements
         $sth->bindValue("state", (int) $state, PDO::PARAM_INT);
         $sth->bindValue("time", date("Y-m-d H:i:s"));
         $sth->bindValue("password", $passwordHash);
-        $sth->execute();
-
-        $id = (int) (($pg) ? $sth->fetchColumn() : $this->db->lastInsertId());
-        if (!$id) {
+        if (!$sth->execute()) {
+            return false;
+        }
+        if (!$id = (int) (($pg) ? $sth->fetchColumn() : $this->db->lastInsertId())) {
             return false;
         }
 
