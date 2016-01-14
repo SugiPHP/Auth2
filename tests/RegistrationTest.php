@@ -10,9 +10,9 @@ namespace SugiPHP\Auth2\Tests;
 use SugiPHP\Auth2\User\UserMapper;
 use SugiPHP\Auth2\Gateway\MemoryGateway as Gateway;
 use SugiPHP\Auth2\Exception\GeneralException;
+use SugiPHP\Auth2\Exception\InvalidArgumentException;
 use SugiPHP\Auth2\Validator\Validator;
 use SugiPHP\Auth2\Registration;
-use InvalidArgumentException;
 
 class RegistrationTest extends \PHPUnit_Framework_TestCase
 {
@@ -54,7 +54,7 @@ class RegistrationTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException InvalidArgumentException
+     * @expectedException SugiPHP\Auth2\Exception\InvalidArgumentException
      */
     public function testExceptionIfEmailNotValid()
     {
@@ -62,7 +62,7 @@ class RegistrationTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException InvalidArgumentException
+     * @expectedException SugiPHP\Auth2\Exception\InvalidArgumentException
      */
     public function testExceptionIfUsernameIsEmpty()
     {
@@ -70,7 +70,7 @@ class RegistrationTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException InvalidArgumentException
+     * @expectedException SugiPHP\Auth2\Exception\InvalidArgumentException
      */
     public function testExceptionIfEmailIsEmpty()
     {
@@ -78,7 +78,7 @@ class RegistrationTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException InvalidArgumentException
+     * @expectedException SugiPHP\Auth2\Exception\InvalidArgumentException
      */
     public function testExceptionIfPasswrodIsEmpty()
     {
@@ -86,7 +86,7 @@ class RegistrationTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException InvalidArgumentException
+     * @expectedException SugiPHP\Auth2\Exception\InvalidArgumentException
      */
     public function testExceptionIfPasswrodConfirmationIsEmpty()
     {
@@ -94,7 +94,7 @@ class RegistrationTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException InvalidArgumentException
+     * @expectedException SugiPHP\Auth2\Exception\InvalidArgumentException
      */
     public function testExceptionIfPasswrodConfirmationDiffers()
     {
@@ -102,7 +102,7 @@ class RegistrationTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException InvalidArgumentException
+     * @expectedException SugiPHP\Auth2\Exception\InvalidArgumentException
      */
     public function testExceptionIfPasswrodTooWeek()
     {

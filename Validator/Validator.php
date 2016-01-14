@@ -7,7 +7,7 @@
 
 namespace SugiPHP\Auth2\Validator;
 
-use InvalidArgumentException;
+use SugiPHP\Auth2\Exception\InvalidArgumentException;
 use Psr\Log\LoggerInterface as Logger;
 
 class Validator implements ValidatorInterface

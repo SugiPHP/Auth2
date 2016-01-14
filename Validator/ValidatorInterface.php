@@ -14,7 +14,7 @@ interface ValidatorInterface
      *
      * @param string $email
      *
-     * @throws InvalidArgumentException
+     * @throws SugiPHP\Auth2\Exception\InvalidArgumentException
      */
     public function checkEmail($email);
 
@@ -23,7 +23,7 @@ interface ValidatorInterface
      *
      * @param string $username
      *
-     * @throws InvalidArgumentException
+     * @throws SugiPHP\Auth2\Exception\InvalidArgumentException
      */
     public function checkUsername($username);
 
@@ -33,7 +33,7 @@ interface ValidatorInterface
      *
      * @param string $password
      *
-     * @throws InvalidArgumentException
+     * @throws SugiPHP\Auth2\Exception\InvalidArgumentException
      */
     public function checkPassword($password);
 
@@ -43,7 +43,7 @@ interface ValidatorInterface
      * @param string $password  Password
      * @param string $password2 Password confirmation
      *
-     * @throws InvalidArgumentException
+     * @throws SugiPHP\Auth2\Exception\InvalidArgumentException
      */
     public function checkPasswordConfirmation($password, $password2);
 }

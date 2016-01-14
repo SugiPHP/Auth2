@@ -10,7 +10,7 @@ namespace SugiPHP\Auth2\Tests;
 use SugiPHP\Auth2\Validator\Validator;
 use SugiPHP\Auth2\Validator\ValidatorInterface;
 use Psr\Log\NullLogger;
-use InvalidArgumentException;
+use SugiPHP\Auth2\Exception\InvalidArgumentException;
 
 class ValidatorTest extends \PHPUnit_Framework_TestCase
 {
@@ -20,7 +20,7 @@ class ValidatorTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException InvalidArgumentException
+     * @expectedException SugiPHP\Auth2\Exception\InvalidArgumentException
      */
     public function testCheckEmailTrowsExceptionIfEmpty()
     {
@@ -29,7 +29,7 @@ class ValidatorTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException InvalidArgumentException
+     * @expectedException SugiPHP\Auth2\Exception\InvalidArgumentException
      */
     public function testCheckEmailTrowsExceptionIfMoreThan255Chars()
     {
@@ -39,7 +39,7 @@ class ValidatorTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException InvalidArgumentException
+     * @expectedException SugiPHP\Auth2\Exception\InvalidArgumentException
      */
     public function testCheckEmailTrowsExceptionIfNoValidMailGiven()
     {
@@ -56,7 +56,7 @@ class ValidatorTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException InvalidArgumentException
+     * @expectedException SugiPHP\Auth2\Exception\InvalidArgumentException
      */
     public function testCheckUsernameEmpty()
     {
@@ -66,7 +66,7 @@ class ValidatorTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException InvalidArgumentException
+     * @expectedException SugiPHP\Auth2\Exception\InvalidArgumentException
      */
     public function testCheckUsernameTooShort()
     {
@@ -76,7 +76,7 @@ class ValidatorTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException InvalidArgumentException
+     * @expectedException SugiPHP\Auth2\Exception\InvalidArgumentException
      */
     public function testCheckUsernameTooLong()
     {
@@ -86,7 +86,7 @@ class ValidatorTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException InvalidArgumentException
+     * @expectedException SugiPHP\Auth2\Exception\InvalidArgumentException
      */
     public function testCheckUsernameIllegalChars()
     {
@@ -110,7 +110,7 @@ class ValidatorTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException InvalidArgumentException
+     * @expectedException SugiPHP\Auth2\Exception\InvalidArgumentException
      */
     public function testCheckPasswordEmpty()
     {
@@ -120,7 +120,7 @@ class ValidatorTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException InvalidArgumentException
+     * @expectedException SugiPHP\Auth2\Exception\InvalidArgumentException
      */
     public function testCheckPasswordTooShort()
     {
@@ -130,7 +130,7 @@ class ValidatorTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException InvalidArgumentException
+     * @expectedException SugiPHP\Auth2\Exception\InvalidArgumentException
      */
     public function testCheckPasswordTooSimple()
     {
@@ -150,7 +150,7 @@ class ValidatorTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException InvalidArgumentException
+     * @expectedException SugiPHP\Auth2\Exception\InvalidArgumentException
      */
     public function testCheckPasswordConfirmationMissing2()
     {
@@ -160,7 +160,7 @@ class ValidatorTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException InvalidArgumentException
+     * @expectedException SugiPHP\Auth2\Exception\InvalidArgumentException
      */
     public function testCheckPasswordConfirmationMissing()
     {

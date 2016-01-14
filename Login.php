@@ -9,8 +9,8 @@ namespace SugiPHP\Auth2;
 
 use SugiPHP\Auth2\Gateway\LoginGatewayInterface as LoginGateway;
 use SugiPHP\Auth2\Exception\GeneralException;
+use SugiPHP\Auth2\Exception\InvalidArgumentException;
 use SugiPHP\Auth2\User\UserInterface;
-use InvalidArgumentException;
 use UnexpectedValueException;
 
 class Login
