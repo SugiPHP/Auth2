@@ -18,6 +18,17 @@ class NativeSessionStorageTest extends \PHPUnit_Framework_TestCase
         @session_start();
     }
 
+    public function testSetSessionKey()
+    {
+        $storageSession = new NativeSessionStorage();
+        $sessionKey = $storageSession->getSessionKey();
+        $storageSession->setSessionKey($sessionKey."!");
+        $this->assertEquals($sessionKey."!", $storageSession->getSessionKey());
+    }
+
+    /**
+     * @depends testSetSessionKey
+     */
     public function testSetAndGet()
     {
         // Equals

@@ -16,7 +16,7 @@
     },
     "autoload": {
         "psr-4": {
-            "SugiPHP\\Auth2\\": ""
+            "SugiPHP\\Auth2\\": "src/"
         }
     },
     "minimum-stability": "dev"
