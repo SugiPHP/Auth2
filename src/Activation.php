@@ -11,7 +11,7 @@ use SugiPHP\Auth2\Gateway\ActivationGatewayInterface as ActivationGateway;
 use SugiPHP\Auth2\Token\TokenInterface;
 use SugiPHP\Auth2\Exception\GeneralException;
 use SugiPHP\Auth2\User\UserInterface;
-use InvalidArgumentException;
+use SugiPHP\Auth2\Exception\InvalidArgumentException;
 use UnexpectedValueException;
 
 class Activation
@@ -57,10 +57,8 @@ class Activation
             if (!$user = $this->gateway->getByEmail($login)) {
                 throw new GeneralException("Unknown user");
             }
-        } else {
-            if (!$user = $this->gateway->getByUsername($login)) {
-                throw new GeneralException("Unknown user");
-            }
+        } elseif (!$user = $this->gateway->getByUsername($login)) {
+            throw new GeneralException("Unknown user");
         }
 
         // the user is already active

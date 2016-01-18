@@ -69,6 +69,22 @@ class LoginTest extends \PHPUnit_Framework_TestCase
     /**
      * @expectedException SugiPHP\Auth2\Exception\GeneralException
      */
+    public function testLoginFailsIfTheUsernameNotFound()
+    {
+        $this->login->login("foobar", "demo");
+    }
+
+    /**
+     * @expectedException SugiPHP\Auth2\Exception\GeneralException
+     */
+    public function testLoginFailsIfTheEmailNotFound()
+    {
+        $this->login->login("foobar@example.com", "demo");
+    }
+
+    /**
+     * @expectedException SugiPHP\Auth2\Exception\GeneralException
+     */
     public function testLoginFailsIfTheUserIsBlocked()
     {
         $this->login->login("bar", "demo");

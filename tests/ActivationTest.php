@@ -13,7 +13,7 @@ use SugiPHP\Auth2\Gateway\MemoryGateway as Gateway;
 use SugiPHP\Auth2\Exception\GeneralException;
 use SugiPHP\Auth2\Activation;
 use SugiPHP\Auth2\Token\UserToken;
-use InvalidArgumentException;
+use SugiPHP\Auth2\Exception\InvalidArgumentException;
 
 class ActivationTest extends \PHPUnit_Framework_TestCase
 {
@@ -21,6 +21,7 @@ class ActivationTest extends \PHPUnit_Framework_TestCase
     const DEMODATA = [
         1 => ["id" => 1, "username" => 'foo',  "email" => 'foo@bar.com', "state" => 2],
         7 => ["id" => 7, "username" => 'demo', "email" => 'demo@example.com', "state" => 1],
+        9 => ["id" => 9, "username" => 'blocked', "email" => 'demo@example.com', "state" => 3],
     ];
 
     private $gateway;
@@ -54,8 +55,21 @@ class ActivationTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(UserInterface::STATE_ACTIVE, $user3->getState());
     }
 
+    public function testCheckAlreadyActivatedReturnsTrue()
+    {
+        $this->assertTrue($this->activation->activate("demo", self::TOKEN));
+    }
+
     /**
-     * @expectedException InvalidArgumentException
+     * @expectedException SugiPHP\Auth2\Exception\GeneralException
+     */
+    public function testCheckWrongToken()
+    {
+        $this->activation->activate("foo", self::TOKEN);
+    }
+
+    /**
+     * @expectedException SugiPHP\Auth2\Exception\InvalidArgumentException
      */
     public function testExceptionIfTokenIsMissing()
     {
@@ -63,7 +77,7 @@ class ActivationTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException InvalidArgumentException
+     * @expectedException SugiPHP\Auth2\Exception\InvalidArgumentException
      */
     public function testExceptionIfUserParameterIsMissing()
     {
@@ -84,5 +98,13 @@ class ActivationTest extends \PHPUnit_Framework_TestCase
     public function testExceptionIfUserEmailNotFound()
     {
         $this->activation->activate("foobar@example.com", self::TOKEN);
+    }
+
+    /**
+     * @expectedException SugiPHP\Auth2\Exception\GeneralException
+     */
+    public function testExceptionIfUserIsBlocked()
+    {
+        $this->activation->activate("blocked", self::TOKEN);
     }
 }
