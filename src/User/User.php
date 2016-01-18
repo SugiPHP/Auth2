@@ -7,7 +7,7 @@
 
 namespace SugiPHP\Auth2\User;
 
-use InvalidArgumentException;
+use SugiPHP\Auth2\Exception\InvalidArgumentException;
 
 class User implements UserInterface
 {

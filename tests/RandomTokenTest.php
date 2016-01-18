@@ -75,4 +75,14 @@ class RandomTokenTest extends \PHPUnit_Framework_TestCase
         $token = $this->tokenGen->generateToken($this->user);
         $this->assertFalse($this->tokenGen->checkToken($this->user, $token . "*"));
     }
+
+    /**
+     * @depends testCheckTokenReturnsTrueIfTokenIsSame
+     */
+    public function testInvalidateToken()
+    {
+        $token = $this->tokenGen->generateToken($this->user);
+        $this->tokenGen->invalidateToken($this->user, $token);
+        $this->assertFalse($this->tokenGen->checkToken($this->user, $token));
+    }
 }
