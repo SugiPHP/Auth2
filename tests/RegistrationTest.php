@@ -13,6 +13,7 @@ use SugiPHP\Auth2\Exception\GeneralException;
 use SugiPHP\Auth2\Exception\InvalidArgumentException;
 use SugiPHP\Auth2\Validator\Validator;
 use SugiPHP\Auth2\Registration;
+use Psr\Log\NullLogger;
 
 class RegistrationTest extends \PHPUnit_Framework_TestCase
 {
@@ -35,6 +36,13 @@ class RegistrationTest extends \PHPUnit_Framework_TestCase
     public function testCreation()
     {
         $this->assertNotNull($this->registration);
+    }
+
+    public function testRegisterSuccessful()
+    {
+        $user = $this->registration->register("newuser@example.com", "newuser", self::PASS, self::PASS);
+        $this->assertEquals("newuser", $user->getUsername());
+        $this->assertEquals("newuser@example.com", $user->getEmail());
     }
 
     /**
@@ -107,5 +115,14 @@ class RegistrationTest extends \PHPUnit_Framework_TestCase
     public function testExceptionIfPasswrodTooWeek()
     {
         $this->registration->register("newmail@example.com", "newuser", "abc", "abc");
+    }
+
+    /**
+     * @expectedException SugiPHP\Auth2\Exception\GeneralException
+     */
+    public function testLogger()
+    {
+        $this->registration->setLogger(new NullLogger());
+        $this->registration->register("foo@bar.com", "newuser", self::PASS, self::PASS);
     }
 }
