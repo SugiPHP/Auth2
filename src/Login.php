@@ -15,6 +15,8 @@ use UnexpectedValueException;
 
 class Login
 {
+    use PasswordHashTrait;
+
     /**
      * @var Instance of LoginGatewayInterface
      */
@@ -97,18 +99,5 @@ class Login
         if (UserInterface::STATE_ACTIVE != $state) {
             throw new UnexpectedValueException("Unknown user state. Expected 1-3. Got {$state}");
         }
-    }
-
-    /**
-     * Compares a secret against a hash.
-     *
-     * @param string $secret Secret
-     * @param string $hash Secret hash made with cryptSecret() method
-     *
-     * @return boolean
-     */
-    private function checkSecret($secret, $hash)
-    {
-        return password_verify($secret, $hash);
     }
 }

@@ -18,6 +18,8 @@ use UnexpectedValueException;
 
 class Registration
 {
+    use PasswordHashTrait;
+
     /**
      * @var Instance of RegistrationGatewayInterface
      */
@@ -192,17 +194,5 @@ class Registration
         if ($this->logger) {
             $this->logger->log($level, $message);
         }
-    }
-
-    /**
-     * Generates a password hash
-     *
-     * @param string $secret
-     *
-     * @return string
-     */
-    private function cryptSecret($secret)
-    {
-        return password_hash($secret, PASSWORD_BCRYPT);
     }
 }
