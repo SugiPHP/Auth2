@@ -10,10 +10,11 @@ namespace SugiPHP\Auth2\Tests;
 use SugiPHP\Auth2\User\UserMapper;
 use SugiPHP\Auth2\User\UserInterface;
 use SugiPHP\Auth2\Gateway\MemoryGateway as Gateway;
-use SugiPHP\Auth2\Exception\GeneralException;
-use SugiPHP\Auth2\Activation;
+use SugiPHP\Auth2\Validator\Validator;
+use SugiPHP\Auth2\Registration;
 use SugiPHP\Auth2\Token\UserToken;
 use SugiPHP\Auth2\Exception\InvalidArgumentException;
+use SugiPHP\Auth2\Exception\GeneralException;
 
 class ActivationTest extends \PHPUnit_Framework_TestCase
 {
@@ -25,7 +26,7 @@ class ActivationTest extends \PHPUnit_Framework_TestCase
     ];
 
     private $gateway;
-    private $activation;
+    private $service;
     private $tokenGen;
 
     public function setUp()
@@ -33,12 +34,12 @@ class ActivationTest extends \PHPUnit_Framework_TestCase
         $this->tokenGen = new UserToken();
         $data = self::DEMODATA;
         $this->gateway = new Gateway($data, new UserMapper());
-        $this->activation = new Activation($this->gateway, $this->tokenGen);
+        $this->service = new Registration($this->gateway, $this->tokenGen, new Validator());
     }
 
     public function testCreation()
     {
-        $this->assertNotNull($this->activation);
+        $this->assertNotNull($this->service);
     }
 
     public function testCheckActivation()
@@ -46,7 +47,7 @@ class ActivationTest extends \PHPUnit_Framework_TestCase
         $user = $this->gateway->getById(1);
         $this->assertEquals(UserInterface::STATE_INACTIVE, $user->getState());
         $token = $this->tokenGen->generateToken($user);
-        $user2 = $this->activation->activate("foo", $token);
+        $user2 = $this->service->activate("foo", $token);
         $this->assertEquals($user, $user2);
         // todo
         // $this->assertEquals(UserInterface::STATE_ACTIVE, $user2->getState());
@@ -57,7 +58,7 @@ class ActivationTest extends \PHPUnit_Framework_TestCase
 
     public function testCheckAlreadyActivatedReturnsTrue()
     {
-        $this->assertTrue($this->activation->activate("demo", self::TOKEN));
+        $this->assertTrue($this->service->activate("demo", self::TOKEN));
     }
 
     /**
@@ -65,7 +66,7 @@ class ActivationTest extends \PHPUnit_Framework_TestCase
      */
     public function testCheckWrongToken()
     {
-        $this->activation->activate("foo", self::TOKEN);
+        $this->service->activate("foo", self::TOKEN);
     }
 
     /**
@@ -73,7 +74,7 @@ class ActivationTest extends \PHPUnit_Framework_TestCase
      */
     public function testExceptionIfTokenIsMissing()
     {
-        $this->activation->activate("foo", "");
+        $this->service->activate("foo", "");
     }
 
     /**
@@ -81,7 +82,7 @@ class ActivationTest extends \PHPUnit_Framework_TestCase
      */
     public function testExceptionIfUserParameterIsMissing()
     {
-        $this->activation->activate("", self::TOKEN);
+        $this->service->activate("", self::TOKEN);
     }
 
     /**
@@ -89,7 +90,7 @@ class ActivationTest extends \PHPUnit_Framework_TestCase
      */
     public function testExceptionIfUserNotFound()
     {
-        $this->activation->activate("foobar", self::TOKEN);
+        $this->service->activate("foobar", self::TOKEN);
     }
 
     /**
@@ -97,7 +98,7 @@ class ActivationTest extends \PHPUnit_Framework_TestCase
      */
     public function testExceptionIfUserEmailNotFound()
     {
-        $this->activation->activate("foobar@example.com", self::TOKEN);
+        $this->service->activate("foobar@example.com", self::TOKEN);
     }
 
     /**
@@ -105,6 +106,6 @@ class ActivationTest extends \PHPUnit_Framework_TestCase
      */
     public function testExceptionIfUserIsBlocked()
     {
-        $this->activation->activate("blocked", self::TOKEN);
+        $this->service->activate("blocked", self::TOKEN);
     }
 }

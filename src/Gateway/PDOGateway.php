@@ -12,8 +12,7 @@ use PDO;
 
 class PDOGateway implements
     LoginGatewayInterface,
-    RegistrationGatewayInterface,
-    ActivationGatewayInterface
+    RegistrationGatewayInterface
 {
     private $tableUsers = "auth2";
     private $tableUsersFields = "id, username, email, password, state, reg_date, pass_change_date";

@@ -14,7 +14,6 @@ use PDO;
 class MemoryGateway implements
     LoginGatewayInterface,
     RegistrationGatewayInterface,
-    ActivationGatewayInterface,
     TokenGatewayInterface
 {
     /**

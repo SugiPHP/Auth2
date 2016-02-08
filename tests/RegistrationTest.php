@@ -12,6 +12,7 @@ use SugiPHP\Auth2\Gateway\MemoryGateway as Gateway;
 use SugiPHP\Auth2\Exception\GeneralException;
 use SugiPHP\Auth2\Exception\InvalidArgumentException;
 use SugiPHP\Auth2\Validator\Validator;
+use SugiPHP\Auth2\Token\UserToken;
 use SugiPHP\Auth2\Registration;
 use Psr\Log\NullLogger;
 
@@ -24,23 +25,25 @@ class RegistrationTest extends \PHPUnit_Framework_TestCase
     ];
 
     private $gateway;
-    private $registration;
+    private $service;
+    private $tokenGen;
 
     public function setUp()
     {
+        $this->tokenGen = new UserToken();
         $data = self::DEMODATA;
         $this->gateway = new Gateway($data, new UserMapper());
-        $this->registration = new Registration($this->gateway, new Validator());
+        $this->service = new Registration($this->gateway, $this->tokenGen, new Validator());
     }
 
     public function testCreation()
     {
-        $this->assertNotNull($this->registration);
+        $this->assertNotNull($this->service);
     }
 
     public function testRegisterSuccessful()
     {
-        $user = $this->registration->register("newuser@example.com", "newuser", self::PASS, self::PASS);
+        $user = $this->service->register("newuser@example.com", "newuser", self::PASS, self::PASS);
         $this->assertEquals("newuser", $user->getUsername());
         $this->assertEquals("newuser@example.com", $user->getEmail());
     }
@@ -50,7 +53,7 @@ class RegistrationTest extends \PHPUnit_Framework_TestCase
      */
     public function testExceptionIfUsernameExists()
     {
-        $this->registration->register("no@email.com", "demo", self::PASS, self::PASS);
+        $this->service->register("no@email.com", "demo", self::PASS, self::PASS);
     }
 
     /**
@@ -58,7 +61,7 @@ class RegistrationTest extends \PHPUnit_Framework_TestCase
      */
     public function testExceptionIfEmailExists()
     {
-        $this->registration->register("demo@example.com", "wronguser", self::PASS, self::PASS);
+        $this->service->register("demo@example.com", "wronguser", self::PASS, self::PASS);
     }
 
     /**
@@ -66,7 +69,7 @@ class RegistrationTest extends \PHPUnit_Framework_TestCase
      */
     public function testExceptionIfEmailNotValid()
     {
-        $this->registration->register("demo#example.com", "newuser", self::PASS, self::PASS);
+        $this->service->register("demo#example.com", "newuser", self::PASS, self::PASS);
     }
 
     /**
@@ -74,7 +77,7 @@ class RegistrationTest extends \PHPUnit_Framework_TestCase
      */
     public function testExceptionIfUsernameIsEmpty()
     {
-        $this->registration->register("demo@example.com", "", self::PASS, self::PASS);
+        $this->service->register("demo@example.com", "", self::PASS, self::PASS);
     }
 
     /**
@@ -82,7 +85,7 @@ class RegistrationTest extends \PHPUnit_Framework_TestCase
      */
     public function testExceptionIfEmailIsEmpty()
     {
-        $this->registration->register("", "newuser", self::PASS, self::PASS);
+        $this->service->register("", "newuser", self::PASS, self::PASS);
     }
 
     /**
@@ -90,7 +93,7 @@ class RegistrationTest extends \PHPUnit_Framework_TestCase
      */
     public function testExceptionIfPasswrodIsEmpty()
     {
-        $this->registration->register("newmail@example.com", "newuser", "", self::PASS);
+        $this->service->register("newmail@example.com", "newuser", "", self::PASS);
     }
 
     /**
@@ -98,7 +101,7 @@ class RegistrationTest extends \PHPUnit_Framework_TestCase
      */
     public function testExceptionIfPasswrodConfirmationIsEmpty()
     {
-        $this->registration->register("newmail@example.com", "newuser", self::PASS, "");
+        $this->service->register("newmail@example.com", "newuser", self::PASS, "");
     }
 
     /**
@@ -106,7 +109,7 @@ class RegistrationTest extends \PHPUnit_Framework_TestCase
      */
     public function testExceptionIfPasswrodConfirmationDiffers()
     {
-        $this->registration->register("newmail@example.com", "newuser", self::PASS, self::PASS . "+");
+        $this->service->register("newmail@example.com", "newuser", self::PASS, self::PASS . "+");
     }
 
     /**
@@ -114,7 +117,7 @@ class RegistrationTest extends \PHPUnit_Framework_TestCase
      */
     public function testExceptionIfPasswrodTooWeek()
     {
-        $this->registration->register("newmail@example.com", "newuser", "abc", "abc");
+        $this->service->register("newmail@example.com", "newuser", "abc", "abc");
     }
 
     /**
@@ -122,7 +125,7 @@ class RegistrationTest extends \PHPUnit_Framework_TestCase
      */
     public function testLogger()
     {
-        $this->registration->setLogger(new NullLogger());
-        $this->registration->register("foo@bar.com", "newuser", self::PASS, self::PASS);
+        $this->service->setLogger(new NullLogger());
+        $this->service->register("foo@bar.com", "newuser", self::PASS, self::PASS);
     }
 }

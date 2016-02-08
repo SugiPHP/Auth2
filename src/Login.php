@@ -7,7 +7,7 @@
 
 namespace SugiPHP\Auth2;
 
-use SugiPHP\Auth2\Gateway\LoginGatewayInterface as LoginGateway;
+use SugiPHP\Auth2\Gateway\LoginGatewayInterface;
 use SugiPHP\Auth2\Exception\GeneralException;
 use SugiPHP\Auth2\Exception\InvalidArgumentException;
 use SugiPHP\Auth2\User\UserInterface;
@@ -20,7 +20,7 @@ class Login
      */
     private $gateway;
 
-    public function __construct(LoginGateway $gateway)
+    public function __construct(LoginGatewayInterface $gateway)
     {
         $this->gateway = $gateway;
     }
@@ -75,12 +75,8 @@ class Login
             throw new GeneralException($loginFailedMessage);
         }
 
-        // removing password from the return. If you really want to receive a
-        // password you can add additional column with a different name
-        // TODO
-        // unset($user["password"]);
-
-        return $user;
+        // Removing password from the return
+        return $user->withPassword(null);
     }
 
     /**
