@@ -14,8 +14,9 @@ class User implements UserInterface
     private $id;
     private $username;
     private $email;
-    private $password;
     private $state;
+    private $password;
+    private $token;
 
     public function __construct($id, $username, $email, $state, $password)
     {
@@ -34,8 +35,8 @@ class User implements UserInterface
         $this->id = $id;
         $this->username = $username;
         $this->email = $email;
-        $this->password = $password;
         $this->state = $state;
+        $this->password = $password;
     }
 
     /**
@@ -80,6 +81,21 @@ class User implements UserInterface
     }
 
     /**
+     * Returns a new instance with given password hash.
+     *
+     * @param string $passwordHash
+     *
+     * @return UserInterface instance
+     */
+    public function withPassword($passwordHash)
+    {
+        $new = clone $this;
+        $new->password = $passwordHash;
+
+        return $new;
+    }
+
+    /**
      * Returns the user's state.
      * Currently the states are: active, inactive and blocked
      *
@@ -88,5 +104,28 @@ class User implements UserInterface
     public function getState()
     {
         return $this->state;
+    }
+
+    /**
+     * Returns activation forgot password token.
+     *
+     * @return string Returns NULL if there is no token set.
+     */
+    public function getToken()
+    {
+        return $this->token;
+    }
+
+    /**
+     * Returns a new instance with activation or forgot password token.
+     *
+     * @return string
+     */
+    public function withToken($token)
+    {
+        $new = clone $this;
+        $new->token = $token;
+
+        return $new;
     }
 }

@@ -70,4 +70,23 @@ class UserTest extends \PHPUnit_Framework_TestCase
     {
         new User(2, 'demo', 'demo@example.com', -199, 'passw0rd');
     }
+
+    public function testWithPassword()
+    {
+        $user = new User(2, 'demo', 'demo@example.com', 1, 'passw0rd');
+        $user2 = $user->withPassword(null);
+        $this->assertTrue($user2 instanceof \SugiPHP\Auth2\User\UserInterface);
+        $this->assertNotEquals($user, $user2);
+        $this->assertEmpty($user2->getPassword());
+    }
+
+    public function testWithToken()
+    {
+        $user = new User(2, 'demo', 'demo@example.com', 1, 'passw0rd');
+        $this->assertEmpty($user->getToken());
+        $user2 = $user->withToken("randomToken");
+        $this->assertTrue($user2 instanceof \SugiPHP\Auth2\User\UserInterface);
+        $this->assertNotEquals($user, $user2);
+        $this->assertEquals("randomToken", $user2->getToken());
+    }
 }

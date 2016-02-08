@@ -39,6 +39,14 @@ interface UserInterface
     public function getEmail();
 
     /**
+     * Returns the user's state.
+     * Currently the states are: active, inactive and blocked
+     *
+     * @return integer
+     */
+    public function getState();
+
+    /**
      * Returns the encoded password.
      *
      * @return string|null
@@ -46,10 +54,27 @@ interface UserInterface
     public function getPassword();
 
     /**
-     * Returns the user's state.
-     * Currently the states are: active, inactive and blocked
+     * Returns a new instance with given password hash.
      *
-     * @return integer
+     * @param string $passwordHash
+     *
+     * @return UserInterface instance
      */
-    public function getState();
+    public function withPassword($passwordHash);
+
+    /**
+     * Returns activation or forgot password token.
+     *
+     * @return string Returns NULL if there is no token set.
+     */
+    public function getToken();
+
+    /**
+     * Returns a new instance with activation or forgot password token.
+     *
+     * @param string
+     *
+     * @return UserInterface instance
+     */
+    public function withToken($token);
 }
