@@ -13,12 +13,13 @@ use SugiPHP\Auth2\Validator\ValidatorInterface;
 use SugiPHP\Auth2\Exception\GeneralException;
 use SugiPHP\Auth2\Exception\InvalidArgumentException;
 use SugiPHP\Auth2\User\UserInterface;
-use Psr\Log\LoggerInterface as Logger;
+use Psr\Log\LoggerAwareTrait;
 use UnexpectedValueException;
 
 class Registration
 {
     use PasswordHashTrait;
+    use LoggerAwareTrait;
 
     /**
      * @var Instance of RegistrationGatewayInterface
@@ -34,11 +35,6 @@ class Registration
      * @var Instance of ValidatorInterface
      */
     private $validator;
-
-    /**
-     * @var Instance of Psr\Log\LoggerInterface
-     */
-    private $logger;
 
     public function __construct(RegistrationGatewayInterface $gateway, TokenInterface $tokenGen, ValidatorInterface $validator)
     {
@@ -171,16 +167,6 @@ class Registration
         }
 
         return false;
-    }
-
-    /**
-     * Attach a logger for debugging
-     *
-     * @param Logger $logger
-     */
-    public function setLogger(Logger $logger)
-    {
-        $this->logger = $logger;
     }
 
     /**
