@@ -8,11 +8,11 @@
 namespace SugiPHP\Auth2\Validator;
 
 use SugiPHP\Auth2\Exception\InvalidArgumentException;
-use Psr\Log\LoggerAwareTrait;
+use SugiPHP\Auth2\LoggerTrait;
 
 class Validator implements ValidatorInterface
 {
-    use LoggerAwareTrait;
+    use LoggerTrait;
 
     /**
      * @see ValidatorInterface::checkEmail()
@@ -117,19 +117,6 @@ class Validator implements ValidatorInterface
         // check passwords match
         if ($password2 !== $password) {
             throw new InvalidArgumentException("Въведените пароли се различават");
-        }
-    }
-
-    /**
-     * Logger
-     *
-     * @param string $level
-     * @param string $message
-     */
-    private function log($level, $message)
-    {
-        if ($this->logger) {
-            $this->logger->log($level, $message);
         }
     }
 }

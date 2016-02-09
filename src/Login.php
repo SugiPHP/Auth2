@@ -11,14 +11,14 @@ use SugiPHP\Auth2\Gateway\LoginGatewayInterface;
 use SugiPHP\Auth2\Exception\GeneralException;
 use SugiPHP\Auth2\Exception\InvalidArgumentException;
 use SugiPHP\Auth2\User\UserInterface;
-use Plana\Domain\Auth\Storage\StorageInterface;
-use Psr\Log\LoggerAwareTrait;
+use SugiPHP\Auth2\Storage\StorageInterface;
+use SugiPHP\Auth2\LoggerTrait;
 use UnexpectedValueException;
 
 class Login
 {
     use PasswordHashTrait;
-    use LoggerAwareTrait;
+    use LoggerTrait;
 
     /**
      * @var Instance of Gateway\LoginGatewayInterface

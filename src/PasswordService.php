@@ -15,13 +15,13 @@ use SugiPHP\Auth2\Exception\InvalidArgumentException;
 use SugiPHP\Auth2\User\UserInterface;
 use SugiPHP\Auth2\User\User;
 use SugiPHP\Auth2\Storage\StorageInterface;
-use Psr\Log\LoggerAwareTrait;
+use SugiPHP\Auth2\LoggerTrait;
 use UnexpectedValueException;
 
 class PasswordService
 {
     use PasswordHashTrait;
-    use LoggerAwareTrait;
+    use LoggerTrait;
 
     /**
      * @var Instance of PasswordGatewayInterface
@@ -212,18 +212,5 @@ class PasswordService
 
         $this->log("critical", "Cannot reset user password: Unknown {$userText} state. Expected 1-3. Got {$state}");
         throw new UnexpectedValueException("Unknown user state. Expected 1-3. Got {$state}");
-    }
-
-    /**
-     * Logger
-     *
-     * @param string $level
-     * @param string $message
-     */
-    private function log($level, $message)
-    {
-        if ($this->logger) {
-            $this->logger->log($level, $message);
-        }
     }
 }
