@@ -11,6 +11,7 @@ use SugiPHP\Auth2\Gateway\LoginGatewayInterface;
 use SugiPHP\Auth2\Exception\GeneralException;
 use SugiPHP\Auth2\Exception\InvalidArgumentException;
 use SugiPHP\Auth2\User\UserInterface;
+use Plana\Domain\Auth\Storage\StorageInterface;
 use Psr\Log\LoggerAwareTrait;
 use UnexpectedValueException;
 
@@ -20,9 +21,21 @@ class Login
     use LoggerAwareTrait;
 
     /**
-     * @var Instance of LoginGatewayInterface
+     * @var Instance of Gateway\LoginGatewayInterface
      */
     private $gateway;
+
+    /**
+     * @var Instance of Storage\StorageInterface
+     */
+    private $storage;
+
+    /**
+     * Checked user.
+     *
+     * @var User\UserInterface
+     */
+    private $user;
 
     public function __construct(LoginGatewayInterface $gateway)
     {
@@ -41,15 +54,16 @@ class Login
      */
     public function login($login, $password)
     {
-        // Incorrect username or password - GitHub
-        // The email and password you entered don't match. - Google
-        // The password you entered for the email or username demo is incorrect - WordPress
-        // The username and password you entered did not match our records. Please double-check and try again. - Twitter
-        // "Username/password mismatch"
-        // "Email/password mismatch"
-        // "Грешно потребителско име/парола"
-        // "Грешен email адрес/парола"
-        $loginFailedMessage = "Грешен потребител/парола.";
+        // Incorrect username or password
+        // The email and password you entered don't match
+        // The password you entered for the email or username demo is incorrect
+        // The username and password you entered did not match our records. Please double-check and try again
+        // Username/password mismatch
+        // Email/password mismatch
+        // Грешно потребителско име/парола
+        // Грешен email адрес/парола
+        // Грешен потребител/парола
+        $loginFailedMessage = "Incorrect username or password";
 
         // check username or email is set
         if (!$login) {
@@ -79,8 +93,61 @@ class Login
             throw new GeneralException($loginFailedMessage);
         }
 
+        if ($this->storage) {
+            $this->storage->set($user);
+        }
+        $this->user = $user;
+
         // Removing password from the return
         return $user->withPassword(null);
+    }
+
+    public function logout()
+    {
+        if ($this->storage) {
+            $this->storage->remove();
+        }
+        $this->user = null;
+    }
+
+    public function getUser()
+    {
+        if ($this->user) {
+            return $this->user;
+        }
+
+        if (!$user = $this->storage->get()) {
+            return ;
+        }
+
+        if (!$data = $this->gateway->getById($user->getId())) {
+            // clear stored user
+            $this->storage->remove();
+            return ;
+        }
+
+        // check after login if the user has been blocked
+        if (UserInterface::STATE_ACTIVE != $data->getState()) {
+            // clear stored user
+            $this->storage->remove();
+            return ;
+        }
+
+        // check if the user has changed his/her password (probably on some other device),
+        // so force him/her to authenticate again.
+        if ($data->getPassword() != $user->getPassword()) {
+            // clear stored user
+            $this->storage->remove();
+            return ;
+        }
+
+        // Removing password from the return
+        return $data->withPassword(null);
+    }
+
+    public function setStorage(StorageInterface $storage)
+    {
+        $this->storage = $storage;
     }
 
     /**
