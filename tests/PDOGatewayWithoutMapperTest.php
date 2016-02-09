@@ -157,4 +157,22 @@ class PDOGatewayWithoutMapperTest extends \PHPUnit_Framework_TestCase
         $newstate = $row["state"];
         $this->assertEquals($oldstate + 1, $newstate);
     }
+
+    public function testUpdatePassword()
+    {
+        $user = $this->gateway->getById(7);
+        $oldPass = $user["password"];
+
+        $res = $this->gateway->updatePassword(7, "newhash");
+        $this->assertTrue($res);
+        $user = $this->gateway->getById(7);
+        $newPass = $user["password"];
+        $this->assertNotEquals($newPass, $oldPass);
+    }
+
+    public function testUpdatePasswordReturnsFalse()
+    {
+        $res = $this->gateway->updatePassword(999, "newhash");
+        $this->assertFalse($res);
+    }
 }

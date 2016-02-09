@@ -14,7 +14,8 @@ use PDO;
 class MemoryGateway implements
     LoginGatewayInterface,
     RegistrationGatewayInterface,
-    TokenGatewayInterface
+    TokenGatewayInterface,
+    PasswordGatewayInterface
 {
     /**
      * @var UserMapper Object
@@ -82,13 +83,26 @@ class MemoryGateway implements
     /**
      * @see ActivationGatewayInterface::updateState()
      */
-    public function updateState($id, $state)
+    public function updateState($userId, $state)
     {
-        if (empty($this->storage[$id])) {
+        if (empty($this->storage[$userId])) {
             return false;
         }
 
-        $this->storage[$id]["state"] = $state;
+        $this->storage[$userId]["state"] = $state;
+        return true;
+    }
+
+    /**
+     * @see PasswordGatewayInterface::updatePassword()
+     */
+    public function updatePassword($userId, $passwordHash)
+    {
+        if (empty($this->storage[$userId])) {
+            return false;
+        }
+
+        $this->storage[$userId]["password"] = $passwordHash;
         return true;
     }
 

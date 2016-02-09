@@ -107,6 +107,25 @@ class User implements UserInterface
     }
 
     /**
+     * Returns a new user instance with a given state
+     *
+     * @param integer $state
+     *
+     * @return UserInterface instance
+     */
+    public function withState($state)
+    {
+        if (!in_array($state, [UserInterface::STATE_ACTIVE, UserInterface::STATE_INACTIVE, UserInterface::STATE_BLOCKED])) {
+            throw new InvalidArgumentException("Unknown user state");
+        }
+
+        $new = clone $this;
+        $new->state = $state;
+
+        return $new;
+    }
+
+    /**
      * Returns activation forgot password token.
      *
      * @return string Returns NULL if there is no token set.

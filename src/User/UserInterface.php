@@ -47,6 +47,15 @@ interface UserInterface
     public function getState();
 
     /**
+     * Returns a new user instance with a given state
+     *
+     * @param integer $state
+     *
+     * @return UserInterface instance
+     */
+    public function withState($state);
+
+    /**
      * Returns the encoded password.
      *
      * @return string|null

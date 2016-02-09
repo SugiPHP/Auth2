@@ -24,8 +24,8 @@ interface RegistrationGatewayInterface extends LoginGatewayInterface
     /**
      * Changes user state.
      *
-     * @param integer $id
+     * @param integer $userId
      * @param integer $state
      */
-    public function updateState($id, $state);
+    public function updateState($userId, $state);
 }

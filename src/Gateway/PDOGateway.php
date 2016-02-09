@@ -12,7 +12,8 @@ use PDO;
 
 class PDOGateway implements
     LoginGatewayInterface,
-    RegistrationGatewayInterface
+    RegistrationGatewayInterface,
+    PasswordGatewayInterface
 {
     private $tableUsers = "auth2";
     private $tableUsersFields = "id, username, email, password, state, reg_date, pass_change_date";
@@ -99,13 +100,26 @@ class PDOGateway implements
     /**
      * @see ActivationGatewayInterface::updateState()
      */
-    public function updateState($id, $state)
+    public function updateState($userId, $state)
     {
-        $sql = "UPDATE {$this->tableUsers} SET state = :state
-                WHERE id = :id";
+        $sql = "UPDATE {$this->tableUsers} SET state = :state WHERE id = :id";
         $sth = $this->db->prepare($sql);
-        $sth->bindValue("id", (int) $id, PDO::PARAM_INT);
+        $sth->bindValue("id", (int) $userId, PDO::PARAM_INT);
         $sth->bindValue("state", (int) $state, PDO::PARAM_INT);
+        $sth->execute();
+
+        return (bool) $sth->rowCount();
+    }
+
+    /**
+     * @see PasswordGatewayInterface::updatePassword()
+     */
+    public function updatePassword($userId, $passwordHash)
+    {
+        $sql = "UPDATE {$this->tableUsers} SET password = :password WHERE id = :id";
+        $sth = $this->db->prepare($sql);
+        $sth->bindValue("id", (int) $userId, PDO::PARAM_INT);
+        $sth->bindValue("password", $passwordHash);
         $sth->execute();
 
         return (bool) $sth->rowCount();

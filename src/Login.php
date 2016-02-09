@@ -11,11 +11,13 @@ use SugiPHP\Auth2\Gateway\LoginGatewayInterface;
 use SugiPHP\Auth2\Exception\GeneralException;
 use SugiPHP\Auth2\Exception\InvalidArgumentException;
 use SugiPHP\Auth2\User\UserInterface;
+use Psr\Log\LoggerAwareTrait;
 use UnexpectedValueException;
 
 class Login
 {
     use PasswordHashTrait;
+    use LoggerAwareTrait;
 
     /**
      * @var Instance of LoginGatewayInterface
