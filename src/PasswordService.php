@@ -132,6 +132,10 @@ class PasswordService
         $this->tokenGen->invalidateToken($user, $token);
         $this->log("debug", "User token {$token} invalidated");
 
+        if ($this->storage) {
+            $this->storage->set($user->withPassword($passwordHash));
+        }
+
         return $user->withPassword(null);
     }
 
