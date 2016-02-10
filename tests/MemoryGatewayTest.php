@@ -208,6 +208,27 @@ class MemoryGatewayTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * @depends testStoreMoreTokens
+     */
+    public function testDeleteUserTokens()
+    {
+        $user1 = 1;
+        $token1 = md5(mt_rand());
+        $token1more = md5(mt_rand());
+        $user7 = 7;
+        $token7 = md5(mt_rand());
+        $this->gateway->storeToken($token1, $user1);
+        $this->gateway->storeToken($token7, $user7);
+        $this->gateway->storeToken($token1more, $user1);
+
+        $this->gateway->deleteUserTokens($user1);
+
+        $this->assertEmpty($this->gateway->findToken($token1));
+        $this->assertEmpty($this->gateway->findToken($token1more));
+        $this->assertEquals($user7, $this->gateway->findToken($token7));
+    }
+
+    /**
      * @depends testStoreToken
      * @depends testFindTokenReturnsFalseIfTokenNotFound
      */

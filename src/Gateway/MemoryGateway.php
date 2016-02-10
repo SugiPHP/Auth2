@@ -130,6 +130,16 @@ class MemoryGateway implements
         unset($this->tokens[$token]);
     }
 
+    /**
+     * @see TokenGatewayInterface::deleteUserTokens()
+     */
+    public function deleteUserTokens($userId)
+    {
+        $this->tokens = array_filter($this->tokens, function ($tokenUser) use ($userId) {
+            return ($tokenUser != $userId);
+        });
+    }
+
     private function findByKey($key, $value)
     {
         foreach ($this->storage as $row) {

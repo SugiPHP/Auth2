@@ -34,4 +34,12 @@ interface TokenGatewayInterface
      * @param string $token
      */
     public function deleteToken($token);
+
+    /**
+     * Deletes all tokens for a particular user. This can be triggered on password changes,
+     * on user blocking, on user requests, etc.
+     *
+     * @param integer $userId
+     */
+    public function deleteUserTokens($userId);
 }
