@@ -204,7 +204,7 @@ class Service
 
     public function getPasswordGateway()
     {
-        if (!$this->registrationGateway) {
+        if (!$this->passwordGateway) {
             $this->passwordGateway = $this->getGateway();
         }
 
