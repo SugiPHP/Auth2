@@ -14,12 +14,14 @@ use SugiPHP\Auth2\Exception\GeneralException;
 use SugiPHP\Auth2\Exception\InvalidArgumentException;
 use SugiPHP\Auth2\User\UserInterface;
 use SugiPHP\Auth2\LoggerTrait;
+use SugiPHP\Auth2\StorageTrait;
 use UnexpectedValueException;
 
 class Registration
 {
     use PasswordHashTrait;
     use LoggerTrait;
+    use StorageTrait;
 
     /**
      * @var Instance of RegistrationGatewayInterface
@@ -132,7 +134,12 @@ class Registration
 
         $this->tokenGen->invalidateToken($token);
 
-        return $user;
+        $user = $user->withToken(null)->withState(UserInterface::STATE_ACTIVE);
+        if ($this->storage) {
+            $this->storage->set($user);
+        }
+
+        return $user->withPassword(null);
     }
 
     /**
@@ -145,7 +152,8 @@ class Registration
     {
         if (UserInterface::STATE_BLOCKED == $state) {
             // User account is blocked
-            throw new GeneralException("Вашият потребителски акаунт е блокиран");
+            // Вашият потребителски акаунт е блокиран
+            throw new GeneralException("Your user account has been blocked");
         }
 
         if (UserInterface::STATE_ACTIVE == $state) {

@@ -16,12 +16,14 @@ use SugiPHP\Auth2\User\UserInterface;
 use SugiPHP\Auth2\User\User;
 use SugiPHP\Auth2\Storage\StorageInterface;
 use SugiPHP\Auth2\LoggerTrait;
+use SugiPHP\Auth2\StorageTrait;
 use UnexpectedValueException;
 
 class PasswordService
 {
     use PasswordHashTrait;
     use LoggerTrait;
+    use StorageTrait;
 
     /**
      * @var Instance of PasswordGatewayInterface
@@ -37,11 +39,6 @@ class PasswordService
      * @var Instance of TokenInterface
      */
     private $tokenGen;
-
-    /**
-     * @var Instance of Storage\StorageInterface
-     */
-    private $storage;
 
     public function __construct(PasswordGatewayInterface $gateway, TokenInterface $tokenGen, ValidatorInterface $validator)
     {
@@ -174,11 +171,6 @@ class PasswordService
         }
 
         return $user->withPassword(null);
-    }
-
-    public function setStorage(StorageInterface $storage)
-    {
-        $this->storage = $storage;
     }
 
     /**

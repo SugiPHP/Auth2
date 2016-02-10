@@ -48,12 +48,8 @@ class ActivationTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(UserInterface::STATE_INACTIVE, $user->getState());
         $token = $this->tokenGen->generateToken($user);
         $user2 = $this->service->activate($token);
-        $this->assertEquals($user, $user2);
-        // todo
-        // $this->assertEquals(UserInterface::STATE_ACTIVE, $user2->getState());
-
-        $user3 = $this->gateway->getById(1);
-        $this->assertEquals(UserInterface::STATE_ACTIVE, $user3->getState());
+        $this->assertEquals(1, $user2->getId());
+        $this->assertEquals(UserInterface::STATE_ACTIVE, $user2->getState());
     }
 
     public function testCheckAlreadyActivatedReturnsTrue()

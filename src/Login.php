@@ -11,24 +11,20 @@ use SugiPHP\Auth2\Gateway\LoginGatewayInterface;
 use SugiPHP\Auth2\Exception\GeneralException;
 use SugiPHP\Auth2\Exception\InvalidArgumentException;
 use SugiPHP\Auth2\User\UserInterface;
-use SugiPHP\Auth2\Storage\StorageInterface;
 use SugiPHP\Auth2\LoggerTrait;
+use SugiPHP\Auth2\StorageTrait;
 use UnexpectedValueException;
 
 class Login
 {
     use PasswordHashTrait;
     use LoggerTrait;
+    use StorageTrait;
 
     /**
      * @var Instance of Gateway\LoginGatewayInterface
      */
     private $gateway;
-
-    /**
-     * @var Instance of Storage\StorageInterface
-     */
-    private $storage;
 
     /**
      * Checked user.
@@ -148,11 +144,6 @@ class Login
 
         // Removing password from the return
         return $data->withPassword(null);
-    }
-
-    public function setStorage(StorageInterface $storage)
-    {
-        $this->storage = $storage;
     }
 
     /**
