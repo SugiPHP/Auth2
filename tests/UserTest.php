@@ -89,4 +89,32 @@ class UserTest extends \PHPUnit_Framework_TestCase
         $this->assertNotEquals($user, $user2);
         $this->assertEquals("randomToken", $user2->getToken());
     }
+
+    public function testWithState()
+    {
+        $user = new User(2, 'demo', 'demo@example.com', 1, 'passw0rd');
+        $this->assertEquals(1, $user->getState());
+        $user2 = $user->withState(2);
+        $this->assertTrue($user2 instanceof \SugiPHP\Auth2\User\UserInterface);
+        $this->assertNotEquals($user, $user2);
+        $this->assertEquals(2, $user2->getState());
+    }
+
+    /**
+     * @expectedException SugiPHP\Auth2\Exception\InvalidArgumentException
+     */
+    public function testWithStateTrhowsExceptionIfTheValueIsNotKnown()
+    {
+        $user = new User(2, 'demo', 'demo@example.com', 1, 'passw0rd');
+        $user2 = $user->withState(99);
+    }
+
+    /**
+     * @expectedException SugiPHP\Auth2\Exception\InvalidArgumentException
+     */
+    public function testWithStateTrhowsExceptionIfTheValueIsNotSet()
+    {
+        $user = new User(2, 'demo', 'demo@example.com', 1, 'passw0rd');
+        $user2 = $user->withState(false);
+    }
 }

@@ -113,4 +113,24 @@ class LoginTest extends \PHPUnit_Framework_TestCase
     {
         $this->login->login("demo", "wrongpass");
     }
+
+    public function testGetUserReturnsNotNullIfUserIsNotLoggedIn()
+    {
+        $this->assertEmpty($this->login->getUser());
+    }
+
+
+    public function testGetUserReturnsLoggedInUser()
+    {
+        $user = $this->login->login("demo@example.com", "demo");
+        $user2 = $this->login->getUser();
+        $this->assertEquals($user, $user2);
+    }
+
+    public function testLogout()
+    {
+        $user = $this->login->login("demo@example.com", "demo");
+        $this->login->logout();
+        $this->assertEmpty($this->login->getUser());
+    }
 }

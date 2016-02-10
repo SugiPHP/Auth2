@@ -113,7 +113,12 @@ class Login
     public function getUser()
     {
         if ($this->user) {
-            return $this->user;
+            return $this->user->withPassword(null);
+        }
+
+        // No storage
+        if (!$this->storage) {
+            return false;
         }
 
         if (!$user = $this->storage->get()) {
