@@ -113,9 +113,9 @@ class Service
         return $this->getRegistrationService()->register($email, $username, $password, $password2);
     }
 
-    public function activate($login, $token)
+    public function activate($token)
     {
-        return $this->getRegistrationService()->activate($login, $token);
+        return $this->getRegistrationService()->activate($token);
     }
 
     public function forgotPassword($email)
@@ -123,9 +123,9 @@ class Service
         return $this->getPasswordService()->genToken($email);
     }
 
-    public function resetPassword($login, $token, $password1, $password2)
+    public function resetPassword($token, $password1, $password2)
     {
-        return $this->getPasswordService()->resetPassword($login, $token, $password1, $password2);
+        return $this->getPasswordService()->resetPassword($token, $password1, $password2);
     }
 
     public function changePassword($userId, $old, $password1, $password2)
