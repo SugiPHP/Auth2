@@ -69,7 +69,7 @@ class RandomToken implements TokenInterface
     /**
      * @see TokenInterface::invalidateToken()
      */
-    public function invalidateToken(UserInterface $user, $token)
+    public function invalidateToken($token)
     {
         $this->gateway->deleteToken($token);
     }

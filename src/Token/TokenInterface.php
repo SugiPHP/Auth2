@@ -9,6 +9,9 @@ namespace SugiPHP\Auth2\Token;
 
 use SugiPHP\Auth2\User\UserInterface;
 
+/**
+ * The Generated Token MUST be unique. No duplications are allowed even for different users.
+ */
 interface TokenInterface
 {
     /**
@@ -33,8 +36,7 @@ interface TokenInterface
     /**
      * Invalidate a token
      *
-     * @param UserInterface $user
      * @param string $token
      */
-    public function invalidateToken(UserInterface $user, $token);
+    public function invalidateToken($token);
 }

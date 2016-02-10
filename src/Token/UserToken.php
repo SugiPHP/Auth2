@@ -30,7 +30,7 @@ class UserToken implements TokenInterface
     /**
      * @see TokenInterface::invalidateToken()
      */
-    public function invalidateToken(UserInterface $user, $token)
+    public function invalidateToken($token)
     {
         // There is no need to invalidate the token, because it is based on user state and user's password
         // User state is changed on activations, and passwords are changed on each pass change
