@@ -24,14 +24,13 @@ interface TokenInterface
     public function generateToken(UserInterface $user);
 
     /**
-     * Check a given token belongs to the user and is valid.
+     * Fetch data hidden behind the token.
      *
-     * @param UserInterface $user
      * @param string $token
      *
-     * @return boolean
+     * @return mixed FALSE or NULL if the token is not found or invalidated. Integer to represent UserID
      */
-    public function checkToken(UserInterface $user, $token);
+    public function fetchToken($token);
 
     /**
      * Invalidate a token

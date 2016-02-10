@@ -8,23 +8,43 @@
 namespace SugiPHP\Auth2\Token;
 
 use SugiPHP\Auth2\User\UserInterface;
+use SugiPHP\Auth2\Gateway\LoginGatewayInterface;
 
 class UserToken implements TokenInterface
 {
+    /**
+     * @var Instance of LoginGatewayInterface
+     */
+    private $gateway;
+
+    public function __construct(LoginGatewayInterface $gateway)
+    {
+        $this->gateway = $gateway;
+    }
+
     /**
      * @see TokenInterface::generateToken()
      */
     public function generateToken(UserInterface $user)
     {
-        return $this->createToken($user);
+        return $this->createUserBasedToken($user);
     }
 
     /**
-     * @see TokenInterface::checkToken()
+     * @see TokenInterface::fetchToken()
      */
-    public function checkToken(UserInterface $user, $token)
+    public function fetchToken($token)
     {
-        return $token === $this->createToken($user);
+        $decoded = base64_decode($token);
+        if (!$userId = strstr($decoded, ".", true)) {
+            return false;
+        }
+        // get the user data from the DB
+        if (!$user = $this->gateway->getById($userId)) {
+            return false;
+        }
+
+        return ($token === $this->createUserBasedToken($user)) ? $userId : false;
     }
 
     /**
@@ -37,13 +57,13 @@ class UserToken implements TokenInterface
         return ;
     }
 
-    private function createToken(UserInterface $user)
+    private function createUserBasedToken(UserInterface $user)
     {
         $code = $user->getId() . $user->getPassword() . $user->getEmail() . $user->getState();
 
         // SHA-512 produces 128 chars
         // base64_encode for the SHA-512 produces 172 chars, 171 without "=".
-        $code = trim(base64_encode(hash("sha512", $code)), "=");
+        $code = trim(base64_encode($user->getId().".".hash("sha512", $code)), "=");
 
         return $code;
     }

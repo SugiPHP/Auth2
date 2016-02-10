@@ -59,30 +59,30 @@ class RandomTokenTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($len, strlen($token));
     }
 
-    public function testCheckTokenReturnsTrueIfTokenIsSame()
+    public function testFetchTokenReturnsTrueIfTokenIsSame()
     {
         $token = $this->tokenGen->generateToken($this->user);
-        $this->assertTrue($this->tokenGen->checkToken($this->user, $token));
+        $this->assertEquals($this->user->getId(), $this->tokenGen->fetchToken($token));
     }
 
-    public function testCheckTokenReturnsFalseIfTokenEmpty()
+    public function testFetchTokenReturnsFalseIfTokenEmpty()
     {
-        $this->assertFalse($this->tokenGen->checkToken($this->user, ""));
+        $this->assertFalse($this->tokenGen->fetchToken(""));
     }
 
-    public function testCheckTokenReturnsFalseIfTokenWrong()
+    public function testFetchTokenReturnsFalseIfTokenWrong()
     {
         $token = $this->tokenGen->generateToken($this->user);
-        $this->assertFalse($this->tokenGen->checkToken($this->user, $token . "*"));
+        $this->assertFalse($this->tokenGen->fetchToken($token . "a"));
     }
 
     /**
-     * @depends testCheckTokenReturnsTrueIfTokenIsSame
+     * @depends testFetchTokenReturnsTrueIfTokenIsSame
      */
     public function testInvalidateToken()
     {
         $token = $this->tokenGen->generateToken($this->user);
         $this->tokenGen->invalidateToken($token);
-        $this->assertFalse($this->tokenGen->checkToken($this->user, $token));
+        $this->assertFalse($this->tokenGen->fetchToken($token));
     }
 }

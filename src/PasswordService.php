@@ -70,7 +70,7 @@ class PasswordService
         return $user->withToken($token);
     }
 
-    public function resetPassword($login, $token, $password1, $password2)
+    public function resetPassword($token, $password1, $password2)
     {
         // checks password is set
         if (!$password1) {
@@ -80,13 +80,6 @@ class PasswordService
         // checks password is set
         if (!$password2) {
             throw new InvalidArgumentException("Моля въведете паролата отново", 4);
-        }
-
-        // check username or email is set
-        if (!$login) {
-            // exception code 1 for the 1st argument
-            $this->log("error", "Cannot reset user password: Missing login parameter");
-            throw new GeneralException("Missing user parameter", 1);
         }
 
         // check token is given
@@ -100,21 +93,15 @@ class PasswordService
         // Check passwords match and throw InvalidArgumentException on error
         $this->validator->checkPasswordConfirmation($password1, $password2);
 
-        if ($emailLogin = (strpos($login, "@") > 0)) {
-            if (!$user = $this->gateway->getByEmail($login)) {
-                $this->log("error", "Cannot reset user password: Email $login does not exists");
-                throw new GeneralException("Unknown user");
-            }
-        } elseif (!$user = $this->gateway->getByUsername($login)) {
-            $this->log("error", "Cannot reset user password: Username $login does not exists");
-            throw new GeneralException("Unknown user");
-        }
-
-        if (!$this->tokenGen->checkToken($user, $token)) {
-            $this->log("error", "Cannot reset user password: Token provided is invalid for user {$login}: {$token}");
+        if (!$userId = $this->tokenGen->fetchToken($token)) {
+            $this->log("error", "Cannot reset user password: Token provided is invalid: {$token}");
             throw new GeneralException("Wrong token");
         }
 
+        if (!$user = $this->gateway->getById($userId)) {
+            $this->log("error", "Cannot reset user password: User {$userId} does not exists");
+            throw new GeneralException("Unknown user");
+        }
 
         $this->checkState($user);
         // change to state if it is not already ACTIVE!
@@ -127,9 +114,10 @@ class PasswordService
         $passwordHash = $this->cryptSecret($password1);
 
         $this->gateway->updatePassword($user->getId(), $passwordHash);
-        $this->log("debug", "User password is updated for user {$login}");
+        $userString = $user->getId() . " (" . $user->getUsername() . "<" .$user->getEmail() . ">)";
+        $this->log("debug", "User password is updated for user {$userString}");
 
-        $this->tokenGen->invalidateToken($user, $token);
+        $this->tokenGen->invalidateToken($token);
         $this->log("debug", "User token {$token} invalidated");
 
         if ($this->storage) {

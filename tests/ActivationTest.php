@@ -31,9 +31,9 @@ class ActivationTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $this->tokenGen = new UserToken();
         $data = self::DEMODATA;
         $this->gateway = new Gateway($data, new UserMapper());
+        $this->tokenGen = new UserToken($this->gateway);
         $this->service = new Registration($this->gateway, $this->tokenGen, new Validator());
     }
 
@@ -47,7 +47,7 @@ class ActivationTest extends \PHPUnit_Framework_TestCase
         $user = $this->gateway->getById(1);
         $this->assertEquals(UserInterface::STATE_INACTIVE, $user->getState());
         $token = $this->tokenGen->generateToken($user);
-        $user2 = $this->service->activate("foo", $token);
+        $user2 = $this->service->activate($token);
         $this->assertEquals($user, $user2);
         // todo
         // $this->assertEquals(UserInterface::STATE_ACTIVE, $user2->getState());
@@ -58,7 +58,10 @@ class ActivationTest extends \PHPUnit_Framework_TestCase
 
     public function testCheckAlreadyActivatedReturnsTrue()
     {
-        $this->assertTrue($this->service->activate("demo", self::TOKEN));
+        $user = $this->gateway->getById(7);
+        $this->assertEquals(UserInterface::STATE_ACTIVE, $user->getState());
+        $token = $this->tokenGen->generateToken($user);
+        $this->assertTrue($this->service->activate($token));
     }
 
     /**
@@ -66,7 +69,7 @@ class ActivationTest extends \PHPUnit_Framework_TestCase
      */
     public function testCheckWrongToken()
     {
-        $this->service->activate("foo", self::TOKEN);
+        $this->service->activate(self::TOKEN);
     }
 
     /**
@@ -74,38 +77,6 @@ class ActivationTest extends \PHPUnit_Framework_TestCase
      */
     public function testExceptionIfTokenIsMissing()
     {
-        $this->service->activate("foo", "");
-    }
-
-    /**
-     * @expectedException SugiPHP\Auth2\Exception\InvalidArgumentException
-     */
-    public function testExceptionIfUserParameterIsMissing()
-    {
-        $this->service->activate("", self::TOKEN);
-    }
-
-    /**
-     * @expectedException SugiPHP\Auth2\Exception\GeneralException
-     */
-    public function testExceptionIfUserNotFound()
-    {
-        $this->service->activate("foobar", self::TOKEN);
-    }
-
-    /**
-     * @expectedException SugiPHP\Auth2\Exception\GeneralException
-     */
-    public function testExceptionIfUserEmailNotFound()
-    {
-        $this->service->activate("foobar@example.com", self::TOKEN);
-    }
-
-    /**
-     * @expectedException SugiPHP\Auth2\Exception\GeneralException
-     */
-    public function testExceptionIfUserIsBlocked()
-    {
-        $this->service->activate("blocked", self::TOKEN);
+        $this->service->activate("");
     }
 }

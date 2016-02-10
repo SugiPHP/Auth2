@@ -31,9 +31,9 @@ class PasswordServiceTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $this->tokenGen = new UserToken();
         $data = self::DEMODATA;
         $this->gateway = new Gateway($data, new UserMapper());
+        $this->tokenGen = new UserToken($this->gateway);
         $this->service = new PasswordService($this->gateway, $this->tokenGen, new Validator());
     }
 
@@ -82,27 +82,13 @@ class PasswordServiceTest extends \PHPUnit_Framework_TestCase
         $this->service->genToken("blocked@example.com");
     }
 
-    public function testResetPasswordEmailReturnsUser()
+    public function testResetPasswordReturnsUser()
     {
         $password = "qwerty1234~!@#";
-        $email = "foo@bar.com";
-        $username = "foo";
+        $email = "demo@example.com";
         $user = $this->service->genToken($email);
         $token = $user->getToken();
-        $user = $this->service->resetPassword($email, $token, $password, $password);
-        $this->assertNotNull($user);
-        $this->assertTrue($user instanceof UserInterface);
-        $this->assertEquals(UserInterface::STATE_ACTIVE, $user->getState());
-    }
-
-    public function testResetPasswordWithUsernameReturnsUser()
-    {
-        $password = "qwerty1234~!@#";
-        $email = "foo@bar.com";
-        $username = "foo";
-        $user = $this->service->genToken($email);
-        $token = $user->getToken();
-        $user = $this->service->resetPassword($username, $token, $password, $password);
+        $user = $this->service->resetPassword($token, $password, $password);
         $this->assertNotNull($user);
         $this->assertTrue($user instanceof UserInterface);
         $this->assertEquals(UserInterface::STATE_ACTIVE, $user->getState());
@@ -112,10 +98,9 @@ class PasswordServiceTest extends \PHPUnit_Framework_TestCase
     {
         $password = "qwerty1234~!@#";
         $email = "demo@example.com";
-        $username = "demo";
         $user = $this->service->genToken($email);
         $token = $user->getToken();
-        $user = $this->service->resetPassword($email, $token, $password, $password);
+        $user = $this->service->resetPassword($token, $password, $password);
         $this->assertNotNull($user);
         $this->assertTrue($user instanceof UserInterface);
         $this->assertEquals(UserInterface::STATE_ACTIVE, $user->getState());
@@ -128,10 +113,9 @@ class PasswordServiceTest extends \PHPUnit_Framework_TestCase
     {
         $password = "qwerty1234~!@#";
         $email = "demo@example.com";
-        $username = "demo";
         $user = $this->service->genToken($email);
         $token = $user->getToken();
-        $user = $this->service->resetPassword($email, $token, "", $password);
+        $user = $this->service->resetPassword($token, "", $password);
     }
 
     /**
@@ -141,23 +125,9 @@ class PasswordServiceTest extends \PHPUnit_Framework_TestCase
     {
         $password = "qwerty1234~!@#";
         $email = "demo@example.com";
-        $username = "demo";
         $user = $this->service->genToken($email);
         $token = $user->getToken();
-        $user = $this->service->resetPassword($email, $token, $password, "");
-    }
-
-    /**
-     * @expectedException SugiPHP\Auth2\Exception\GeneralException
-     */
-    public function testResetPasswordThrowsExceptionIfLoginIsNotSet()
-    {
-        $password = "qwerty1234~!@#";
-        $email = "demo@example.com";
-        $username = "demo";
-        $user = $this->service->genToken($email);
-        $token = $user->getToken();
-        $user = $this->service->resetPassword("", $token, $password, $password);
+        $user = $this->service->resetPassword($token, $password, "");
     }
 
     /**
@@ -167,36 +137,9 @@ class PasswordServiceTest extends \PHPUnit_Framework_TestCase
     {
         $password = "qwerty1234~!@#";
         $email = "demo@example.com";
-        $username = "demo";
         $user = $this->service->genToken($email);
         $token = $user->getToken();
-        $user = $this->service->resetPassword($email, "", $password, $password);
-    }
-
-    /**
-     * @expectedException SugiPHP\Auth2\Exception\GeneralException
-     */
-    public function testResetPasswordThrowsExceptionIfUserEmailNotFound()
-    {
-        $password = "qwerty1234~!@#";
-        $email = "demo@example.com";
-        $username = "demo";
-        $user = $this->service->genToken($email);
-        $token = $user->getToken();
-        $user = $this->service->resetPassword($email."notfound", $token, $password, $password);
-    }
-
-    /**
-     * @expectedException SugiPHP\Auth2\Exception\GeneralException
-     */
-    public function testResetPasswordThrowsExceptionIfUsernameNotFound()
-    {
-        $password = "qwerty1234~!@#";
-        $email = "demo@example.com";
-        $username = "demo";
-        $user = $this->service->genToken($email);
-        $token = $user->getToken();
-        $user = $this->service->resetPassword($username."notfound", $token, $password, $password);
+        $user = $this->service->resetPassword("", $password, $password);
     }
 
     /**
@@ -206,9 +149,8 @@ class PasswordServiceTest extends \PHPUnit_Framework_TestCase
     {
         $password = "qwerty1234~!@#";
         $email = "demo@example.com";
-        $username = "demo";
         $user = $this->service->genToken($email);
         $token = $user->getToken();
-        $user = $this->service->resetPassword($username, $token."123", $password, $password);
+        $user = $this->service->resetPassword($token."123", $password, $password);
     }
 }

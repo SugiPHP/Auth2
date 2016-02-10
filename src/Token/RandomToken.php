@@ -8,7 +8,6 @@
 namespace SugiPHP\Auth2\Token;
 
 use SugiPHP\Auth2\User\UserInterface;
-use SugiPHP\Auth2\Exception\GeneralException;
 use SugiPHP\Auth2\Gateway\TokenGatewayInterface;
 
 class RandomToken implements TokenInterface
@@ -54,16 +53,16 @@ class RandomToken implements TokenInterface
     }
 
     /**
-     * @see TokenInterface::checkToken()
+     * @see TokenInterface::fetchToken()
      */
-    public function checkToken(UserInterface $user, $token)
+    public function fetchToken($token)
     {
         $userId = $this->gateway->findToken($token);
         if (!$userId) {
             return false;
         }
 
-        return $user->getId() == $userId;
+        return $userId;
     }
 
     /**

@@ -102,24 +102,18 @@ class Registration
      * @throws GeneralException if user is blocked
      * @throws GeneralException token is wrong
      */
-    public function activate($login, $token)
+    public function activate($token)
     {
-        // check username or email is set
-        if (!$login) {
-            // exception code 1 for the 1st argument
-            throw new InvalidArgumentException("Missing user parameter", 1);
-        }
-
         // checks token is set
         if (!$token) {
-            throw new InvalidArgumentException("Missing token", 2);
+            throw new InvalidArgumentException("Missing token");
         }
 
-        if ($emailLogin = (strpos($login, "@") > 0)) {
-            if (!$user = $this->gateway->getByEmail($login)) {
-                throw new GeneralException("Unknown user");
-            }
-        } elseif (!$user = $this->gateway->getByUsername($login)) {
+        if (!$userId = $this->tokenGen->fetchToken($token)) {
+            throw new GeneralException("Wrong activation token");
+        }
+
+        if (!$user = $this->gateway->getById($userId)) {
             throw new GeneralException("Unknown user");
         }
 
@@ -132,15 +126,11 @@ class Registration
             return true;
         }
 
-        if (!$this->tokenGen->checkToken($user, $token)) {
-            throw new GeneralException("Wrong activation token");
-        }
-
         if (!$this->gateway->updateState($user->getId(), UserInterface::STATE_ACTIVE)) {
             throw new GeneralException("Error in activation process");
         }
 
-        $this->tokenGen->invalidateToken($user, $token);
+        $this->tokenGen->invalidateToken($token);
 
         return $user;
     }

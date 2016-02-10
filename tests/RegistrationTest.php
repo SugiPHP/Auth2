@@ -30,9 +30,9 @@ class RegistrationTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $this->tokenGen = new UserToken();
         $data = self::DEMODATA;
         $this->gateway = new Gateway($data, new UserMapper());
+        $this->tokenGen = new UserToken($this->gateway);
         $this->service = new Registration($this->gateway, $this->tokenGen, new Validator());
     }
 
