@@ -59,7 +59,7 @@ class LoginTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException SugiPHP\Auth2\Exception\GeneralException
+     * @expectedException SugiPHP\Auth2\Exception\UserInactiveException
      */
     public function testLoginFailsIfTheUserIsNotActive()
     {
@@ -83,7 +83,7 @@ class LoginTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException SugiPHP\Auth2\Exception\GeneralException
+     * @expectedException SugiPHP\Auth2\Exception\UserBlockedException
      */
     public function testLoginFailsIfTheUserIsBlocked()
     {

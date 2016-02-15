@@ -15,10 +15,10 @@ use SugiPHP\Auth2\Registration;
 use SugiPHP\Auth2\Token\UserToken;
 use SugiPHP\Auth2\Exception\InvalidArgumentException;
 use SugiPHP\Auth2\Exception\GeneralException;
+use SugiPHP\Auth2\Exception\UserBlockedException;
 
 class ActivationTest extends \PHPUnit_Framework_TestCase
 {
-    const TOKEN = "1234567";
     const DEMODATA = [
         1 => ["id" => 1, "username" => 'foo',  "email" => 'foo@bar.com', "state" => 2],
         7 => ["id" => 7, "username" => 'demo', "email" => 'demo@example.com', "state" => 1],
@@ -61,11 +61,25 @@ class ActivationTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * @expectedException SugiPHP\Auth2\Exception\UserBlockedException
+     */
+    public function testCheckUserBlockedToken()
+    {
+        $user = $this->gateway->getById(9);
+        $this->assertEquals(UserInterface::STATE_BLOCKED, $user->getState());
+        $token = $this->tokenGen->generateToken($user);
+        $this->assertTrue($this->service->activate($token));
+        $this->service->activate($token);
+    }
+
+    /**
      * @expectedException SugiPHP\Auth2\Exception\GeneralException
      */
     public function testCheckWrongToken()
     {
-        $this->service->activate(self::TOKEN);
+        $user = $this->gateway->getById(7);
+        $token = $this->tokenGen->generateToken($user);
+        $this->service->activate($token."123");
     }
 
     /**

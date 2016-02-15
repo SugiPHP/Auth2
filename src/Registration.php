@@ -12,6 +12,7 @@ use SugiPHP\Auth2\Token\TokenInterface;
 use SugiPHP\Auth2\Validator\ValidatorInterface;
 use SugiPHP\Auth2\Exception\GeneralException;
 use SugiPHP\Auth2\Exception\InvalidArgumentException;
+use SugiPHP\Auth2\Exception\UserBlockedException;
 use SugiPHP\Auth2\User\UserInterface;
 use SugiPHP\Auth2\LoggerTrait;
 use SugiPHP\Auth2\StorageTrait;
@@ -153,7 +154,7 @@ class Registration
         if (UserInterface::STATE_BLOCKED == $state) {
             // User account is blocked
             // Вашият потребителски акаунт е блокиран
-            throw new GeneralException("Your user account has been blocked");
+            throw new UserBlockedException("Your user account has been blocked");
         }
 
         if (UserInterface::STATE_ACTIVE == $state) {

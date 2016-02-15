@@ -15,6 +15,7 @@ use SugiPHP\Auth2\PasswordService;
 use SugiPHP\Auth2\Token\UserToken;
 use SugiPHP\Auth2\Exception\InvalidArgumentException;
 use SugiPHP\Auth2\Exception\GeneralException;
+use SugiPHP\Auth2\Exception\UserBlockedException;
 
 class PasswordServiceTest extends \PHPUnit_Framework_TestCase
 {
@@ -75,7 +76,7 @@ class PasswordServiceTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException SugiPHP\Auth2\Exception\GeneralException
+     * @expectedException SugiPHP\Auth2\Exception\UserBlockedException
      */
     public function testGenTokenWithWrongStateTrhowsException()
     {

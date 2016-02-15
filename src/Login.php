@@ -10,6 +10,8 @@ namespace SugiPHP\Auth2;
 use SugiPHP\Auth2\Gateway\LoginGatewayInterface;
 use SugiPHP\Auth2\Exception\GeneralException;
 use SugiPHP\Auth2\Exception\InvalidArgumentException;
+use SugiPHP\Auth2\Exception\UserInactiveException;
+use SugiPHP\Auth2\Exception\UserBlockedException;
 use SugiPHP\Auth2\User\UserInterface;
 use SugiPHP\Auth2\LoggerTrait;
 use SugiPHP\Auth2\StorageTrait;
@@ -153,12 +155,14 @@ class Login
     {
         if (UserInterface::STATE_INACTIVE == $state) {
             // Before login you have to confirm your email address
-            throw new GeneralException("Моля потвърдете регистрацията си");
+            // Моля потвърдете регистрацията си
+            throw new UserInactiveException("Before login you have to confirm your email address");
         }
 
         if (UserInterface::STATE_BLOCKED == $state) {
             // User account is blocked
-            throw new GeneralException("Вашият потребителски акаунт е блокиран");
+            // Вашият потребителски акаунт е блокиран
+            throw new UserBlockedException("Your user account has been blocked");
         }
 
         if (UserInterface::STATE_ACTIVE != $state) {

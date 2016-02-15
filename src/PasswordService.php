@@ -12,6 +12,7 @@ use SugiPHP\Auth2\Token\TokenInterface;
 use SugiPHP\Auth2\Validator\ValidatorInterface;
 use SugiPHP\Auth2\Exception\GeneralException;
 use SugiPHP\Auth2\Exception\InvalidArgumentException;
+use SugiPHP\Auth2\Exception\UserBlockedException;
 use SugiPHP\Auth2\User\UserInterface;
 use SugiPHP\Auth2\User\User;
 use SugiPHP\Auth2\LoggerTrait;
@@ -184,9 +185,10 @@ class PasswordService
 
         $userText = "user {$user->getId()} ({$user->getUsername()}<{$user->getEmail()}>)";
         if (UserInterface::STATE_BLOCKED == $state) {
-            // User account is blocked
             $this->log("error", "Cannot reset user password: The {$userText} is blocked");
-            throw new GeneralException("Вашият потребителски акаунт е блокиран");
+            // User account is blocked
+            // Вашият потребителски акаунт е блокиран
+            throw new UserBlockedException("Your user account has been blocked");
         }
 
         $this->log("critical", "Cannot reset user password: Unknown {$userText} state. Expected 1-3. Got {$state}");
