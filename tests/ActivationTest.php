@@ -14,6 +14,7 @@ use SugiPHP\Auth2\Validator\Validator;
 use SugiPHP\Auth2\Registration;
 use SugiPHP\Auth2\Token\UserToken;
 use SugiPHP\Auth2\Exception\InvalidArgumentException;
+use SugiPHP\Auth2\Exception\InvalidTokenException;
 use SugiPHP\Auth2\Exception\GeneralException;
 use SugiPHP\Auth2\Exception\UserBlockedException;
 
@@ -83,7 +84,7 @@ class ActivationTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException SugiPHP\Auth2\Exception\InvalidArgumentException
+     * @expectedException SugiPHP\Auth2\Exception\InvalidTokenException
      */
     public function testExceptionIfTokenIsMissing()
     {

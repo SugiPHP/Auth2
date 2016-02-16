@@ -12,6 +12,7 @@ use SugiPHP\Auth2\Token\TokenInterface;
 use SugiPHP\Auth2\Validator\ValidatorInterface;
 use SugiPHP\Auth2\Exception\GeneralException;
 use SugiPHP\Auth2\Exception\InvalidArgumentException;
+use SugiPHP\Auth2\Exception\InvalidTokenException;
 use SugiPHP\Auth2\Exception\UserBlockedException;
 use SugiPHP\Auth2\User\UserInterface;
 use SugiPHP\Auth2\User\User;
@@ -71,18 +72,18 @@ class PasswordService
     {
         // checks password is set
         if (!$password1) {
-            throw new InvalidArgumentException("Моля въведете парола", 3);
+            throw new InvalidArgumentException("Моля въведете парола", 2);
         }
 
         // checks password is set
         if (!$password2) {
-            throw new InvalidArgumentException("Моля въведете паролата отново", 4);
+            throw new InvalidArgumentException("Моля въведете паролата отново", 3);
         }
 
         // check token is given
         if (!$token) {
             $this->log("error", "Cannot reset user password: Missing token parameter");
-            throw new GeneralException("Missing token", 2);
+            throw new InvalidTokenException("Missing token", 1);
         }
 
         // Check for password strength and throw InvalidArgumentException on error
@@ -92,7 +93,7 @@ class PasswordService
 
         if (!$userId = $this->tokenGen->fetchToken($token)) {
             $this->log("error", "Cannot reset user password: Token provided is invalid: {$token}");
-            throw new GeneralException("Wrong token");
+            throw new InvalidTokenException("Invalid token");
         }
 
         if (!$user = $this->gateway->getById($userId)) {

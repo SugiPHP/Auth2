@@ -14,6 +14,7 @@ use SugiPHP\Auth2\Validator\Validator;
 use SugiPHP\Auth2\PasswordService;
 use SugiPHP\Auth2\Token\UserToken;
 use SugiPHP\Auth2\Exception\InvalidArgumentException;
+use SugiPHP\Auth2\Exception\InvalidTokenException;
 use SugiPHP\Auth2\Exception\GeneralException;
 use SugiPHP\Auth2\Exception\UserBlockedException;
 
@@ -132,7 +133,7 @@ class PasswordServiceTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException SugiPHP\Auth2\Exception\GeneralException
+     * @expectedException SugiPHP\Auth2\Exception\InvalidTokenException
      */
     public function testResetPasswordThrowsExceptionIfTokenIsNotSet()
     {
@@ -144,7 +145,7 @@ class PasswordServiceTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException SugiPHP\Auth2\Exception\GeneralException
+     * @expectedException SugiPHP\Auth2\Exception\InvalidTokenException
      */
     public function testResetPasswordThrowsExceptionOnWrongToken()
     {

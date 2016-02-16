@@ -12,6 +12,7 @@ use SugiPHP\Auth2\Token\TokenInterface;
 use SugiPHP\Auth2\Validator\ValidatorInterface;
 use SugiPHP\Auth2\Exception\GeneralException;
 use SugiPHP\Auth2\Exception\InvalidArgumentException;
+use SugiPHP\Auth2\Exception\InvalidTokenException;
 use SugiPHP\Auth2\Exception\UserBlockedException;
 use SugiPHP\Auth2\User\UserInterface;
 use SugiPHP\Auth2\LoggerTrait;
@@ -100,20 +101,20 @@ class Registration
     /**
      * Activates user account
      *
-     * @throws InvalidArgumentException if user/email or token is missing
+     * @throws InvalidArgumentException if user/email is missing
      * @throws GeneralException if user is unknown
      * @throws GeneralException if user is blocked
-     * @throws GeneralException token is wrong
+     * @throws InvalidTokenException if token is wrong or token is missing
      */
     public function activate($token)
     {
         // checks token is set
         if (!$token) {
-            throw new InvalidArgumentException("Missing token");
+            throw new InvalidTokenException("Missing token");
         }
 
         if (!$userId = $this->tokenGen->fetchToken($token)) {
-            throw new GeneralException("Wrong activation token");
+            throw new InvalidTokenException("Invalid activation token");
         }
 
         if (!$user = $this->gateway->getById($userId)) {
@@ -147,7 +148,7 @@ class Registration
      * Checks current user state and throws exception if it is blocked
      *
      * @param boolean $state
-     * @throws GeneralException if user is blocked
+     * @throws UserBlockedException if user is blocked
      */
     private function checkState($state)
     {
