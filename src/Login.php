@@ -144,8 +144,11 @@ class Login
             return ;
         }
 
+        // saving user for later use
+        $this->user = $data;
+
         // Removing password from the return
-        return $data->withPassword(null);
+        return $this->user->withPassword(null);
     }
 
     /**

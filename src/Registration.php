@@ -110,7 +110,7 @@ class Registration
     {
         // checks token is set
         if (!$token) {
-            throw new InvalidTokenException("Missing token");
+            throw new InvalidTokenException("Missing activation token");
         }
 
         if (!$userId = $this->tokenGen->fetchToken($token)) {
