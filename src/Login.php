@@ -33,7 +33,7 @@ class Login
      *
      * @var User\UserInterface
      */
-    private $user;
+    protected $user;
 
     public function __construct(LoginGatewayInterface $gateway)
     {

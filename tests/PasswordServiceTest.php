@@ -20,7 +20,6 @@ use SugiPHP\Auth2\Exception\UserBlockedException;
 
 class PasswordServiceTest extends \PHPUnit_Framework_TestCase
 {
-    const TOKEN = "1234567";
     const DEMODATA = [
         1 => ["id" => 1, "username" => 'foo',  "email" => 'foo@bar.com', "state" => 2],
         7 => ["id" => 7, "username" => 'demo', "email" => 'demo@example.com', "state" => 1],
@@ -34,6 +33,10 @@ class PasswordServiceTest extends \PHPUnit_Framework_TestCase
     public function setUp()
     {
         $data = self::DEMODATA;
+        foreach ($data as &$row) {
+            // password is demo
+            $row["password"] = '$2y$10$2ZRoTUg0GXOKxYMVZ3orxu2ZloKN6NG3hugC7eiXHF/rmf6bG/GAu';
+        }
         $this->gateway = new Gateway($data, new UserMapper());
         $this->tokenGen = new UserToken($this->gateway);
         $this->service = new PasswordService($this->gateway, $this->tokenGen, new Validator());
@@ -154,5 +157,67 @@ class PasswordServiceTest extends \PHPUnit_Framework_TestCase
         $user = $this->service->genToken($email);
         $token = $user->getToken();
         $user = $this->service->resetPassword($token."123", $password, $password);
+    }
+
+    public function testCahngePasswordReturnsUser()
+    {
+        $old = "demo";
+        $password = "qwerty1234~!@#";
+        $user = $this->service->login("demo", $old);
+        $this->assertTrue($this->service->changePassword($old, $password, $password) instanceof UserInterface);
+    }
+
+    /**
+     * @expectedException SugiPHP\Auth2\Exception\InvalidArgumentException
+     */
+    public function testCahngePasswordThrowsExceptionIfOldPasswordIsEmpty()
+    {
+        $old = "demo";
+        $password = "qwerty1234~!@#";
+        $user = $this->service->login("demo", $old);
+        $this->service->changePassword("", $password, $password);
+    }
+
+    /**
+     * @expectedException SugiPHP\Auth2\Exception\InvalidArgumentException
+     */
+    public function testCahngePasswordThrowsExceptionIfNewPasswordIsEmpty()
+    {
+        $old = "demo";
+        $password = "qwerty1234~!@#";
+        $user = $this->service->login("demo", $old);
+        $this->service->changePassword($old, "", $password);
+    }
+
+    /**
+     * @expectedException SugiPHP\Auth2\Exception\InvalidArgumentException
+     */
+    public function testCahngePasswordThrowsExceptionIfRepeatPasswordIsEmpty()
+    {
+        $old = "demo";
+        $password = "qwerty1234~!@#";
+        $user = $this->service->login("demo", $old);
+        $this->service->changePassword($old, $password, "");
+    }
+
+    /**
+     * @expectedException SugiPHP\Auth2\Exception\GeneralException
+     */
+    public function testCahngePasswordThrowsExceptionIfUserIsNotLoggedIn()
+    {
+        $old = "demo";
+        $password = "qwerty1234~!@#";
+        $this->service->changePassword($old, $password, $password);
+    }
+
+    /**
+     * @expectedException SugiPHP\Auth2\Exception\GeneralException
+     */
+    public function testCahngePasswordThrowsExceptionIfOldPassIsWrong()
+    {
+        $old = "demo";
+        $password = "qwerty1234~!@#";
+        $user = $this->service->login("demo", $old);
+        $this->service->changePassword("wrong", $password, $password);
     }
 }
