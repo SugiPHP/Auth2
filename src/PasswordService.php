@@ -20,11 +20,11 @@ use SugiPHP\Auth2\LoggerTrait;
 use SugiPHP\Auth2\StorageTrait;
 use UnexpectedValueException;
 
-class PasswordService
+class PasswordService extends Login
 {
-    use PasswordHashTrait;
-    use LoggerTrait;
-    use StorageTrait;
+    // use PasswordHashTrait;
+    // use LoggerTrait;
+    // use StorageTrait;
 
     /**
      * @var Instance of PasswordGatewayInterface
@@ -43,6 +43,7 @@ class PasswordService
 
     public function __construct(PasswordGatewayInterface $gateway, TokenInterface $tokenGen, ValidatorInterface $validator)
     {
+        parent::__construct($gateway);
         $this->gateway = $gateway;
         $this->tokenGen = $tokenGen;
         $this->validator = $validator;
@@ -125,24 +126,28 @@ class PasswordService
         return $user->withPassword(null);
     }
 
-    public function changePassword($userId, $old, $password1, $password2)
+    public function changePassword($old, $password1, $password2)
     {
-        if (!$userId) {
-            throw new GeneralException("The user ID should be set", 1);
-        }
-
         if (!$old) {
-            throw new InvalidArgumentException("Моля въведете старата парола", 2);
+            // Моля въведете старата парола
+            throw new InvalidArgumentException("Enter your current password", 1);
         }
 
         // checks password is set
         if (!$password1) {
-            throw new InvalidArgumentException("Моля въведете нова парола", 3);
+            // Моля въведете нова парола
+            throw new InvalidArgumentException("Enter your new password", 2);
         }
 
         // checks password is set
         if (!$password2) {
-            throw new InvalidArgumentException("Моля въведете новата парола отново", 4);
+            // Моля въведете новата парола отново
+            throw new InvalidArgumentException("Repeat your new password", 3);
+        }
+
+        if (!$user = $this->getUser()) {
+            $this->log("error", "Cannot change user password: user is not logged in");
+            throw new GeneralException("User is not logged in");
         }
 
         // Check for password strength and throw InvalidArgumentException on error
@@ -150,20 +155,16 @@ class PasswordService
         // Check passwords match and throw InvalidArgumentException on error
         $this->validator->checkPasswordConfirmation($password1, $password2);
 
-        if (!$user = $this->gateway->getById($userId)) {
-            $this->log("error", "Cannot change user password: user ID {$userId} is not found");
-            throw new GeneralException("Unknown user ID");
-        }
-
         if (!$this->checkSecret($old, $user->getPassword())) {
             $this->log("error", "Cannot change user password: old user password is wrong");
-            throw new GeneralException("Грешна стара парола");
+            // Грешна стара парола
+            throw new GeneralException("Your old password is invalid");
         }
 
         // crypt password
         $passwordHash = $this->cryptSecret($password1);
 
-        $this->gateway->updatePassword($userId, $passwordHash);
+        $this->gateway->updatePassword($user->getId(), $passwordHash);
         $userText = "user {$user->getId()} ({$user->getUsername()}<{$user->getEmail()}>)";
         $this->log("debug", "User password changed for {$userText}");
 

@@ -17,7 +17,7 @@ trait PasswordHashTrait
      *
      * @return boolean
      */
-    private function checkSecret($secret, $hash)
+    protected function checkSecret($secret, $hash)
     {
         return password_verify($secret, $hash);
     }
@@ -29,7 +29,7 @@ trait PasswordHashTrait
      *
      * @return string
      */
-    private function cryptSecret($secret)
+    protected function cryptSecret($secret)
     {
         return password_hash($secret, PASSWORD_BCRYPT);
     }

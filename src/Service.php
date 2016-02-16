@@ -128,9 +128,9 @@ class Service
         return $this->getPasswordService()->resetPassword($token, $password1, $password2);
     }
 
-    public function changePassword($userId, $old, $password1, $password2)
+    public function changePassword($old, $password1, $password2)
     {
-        return $this->getPasswordService()->changePassword($userId, $old, $password1, $password2);
+        return $this->getPasswordService()->changePassword($old, $password1, $password2);
     }
 
     public function getStorage()
