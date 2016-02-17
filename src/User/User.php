@@ -15,10 +15,14 @@ class User implements UserInterface
     private $username;
     private $email;
     private $state;
-    private $password;
+
+    /**
+     * @var string Encrypted (hashed) password
+     */
+    private $passwordHash;
     private $token;
 
-    public function __construct($id, $username, $email, $state, $password)
+    public function __construct($id, $username, $email, $state, $passwordHash)
     {
         if (empty($id)) {
             throw new InvalidArgumentException("The user ID cannot be empty");
@@ -32,7 +36,7 @@ class User implements UserInterface
         $this->id = $id;
         $this->username = $username;
         $this->email = $email;
-        $this->password = $password;
+        $this->passwordHash = $passwordHash;
     }
 
     /**
@@ -73,7 +77,7 @@ class User implements UserInterface
      */
     public function getPassword()
     {
-        return $this->password;
+        return $this->passwordHash;
     }
 
     /**
@@ -85,7 +89,7 @@ class User implements UserInterface
      */
     public function checkPassword($password)
     {
-        return password_verify($password, $this->password);
+        return password_verify($password, $this->passwordHash);
     }
 
     /**
@@ -95,7 +99,7 @@ class User implements UserInterface
      */
     public function setPassword($password)
     {
-        $this->password = password_hash($password, PASSWORD_BCRYPT);
+        $this->passwordHash = password_hash($password, PASSWORD_BCRYPT);
     }
 
     /**
@@ -128,7 +132,7 @@ class User implements UserInterface
     }
 
     /**
-     * Returns activation forgot password token.
+     * Returns activation or forgot password token.
      *
      * @return string Returns NULL if there is no token set.
      */

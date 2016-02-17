@@ -240,7 +240,7 @@ class Service
     public function getTokenGenerator()
     {
         if (!$this->tokenGenerator) {
-            $this->tokenGenerator = new Token\UserToken();
+            $this->tokenGenerator = new Token\UserToken($this->getLoginGateway());
         }
 
         return $this->tokenGenerator;

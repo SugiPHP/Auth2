@@ -145,17 +145,17 @@ class PasswordService extends Login
             throw new InvalidArgumentException("Repeat your new password", 3);
         }
 
+        // Check for password strength and throw InvalidArgumentException on error
+        $this->validator->checkPassword($password1);
+        // Check passwords match and throw InvalidArgumentException on error
+        $this->validator->checkPasswordConfirmation($password1, $password2);
+
         if (!$this->getUser()) {
             $this->log("error", "Cannot change user password: user is not logged in");
             throw new GeneralException("User is not logged in");
         }
         // we need user's password
         $user = $this->user;
-
-        // Check for password strength and throw InvalidArgumentException on error
-        $this->validator->checkPassword($password1);
-        // Check passwords match and throw InvalidArgumentException on error
-        $this->validator->checkPasswordConfirmation($password1, $password2);
 
         if (!$user->checkPassword($old)) {
             $this->log("error", "Cannot change user password: old user password is wrong");
