@@ -81,18 +81,25 @@ class User implements UserInterface
     }
 
     /**
-     * Returns a new instance with given password hash.
+     * Checks the password provided matches the stored hashed password.
      *
-     * @param string $passwordHash
+     * @param string $password
      *
-     * @return UserInterface instance
+     * @return boolean
      */
-    public function withPassword($passwordHash)
+    public function checkPassword($password)
     {
-        $new = clone $this;
-        $new->password = $passwordHash;
+        return password_verify($password, $this->password);
+    }
 
-        return $new;
+    /**
+     * Sets a password.
+     *
+     * @param string $password User's password (not encrypted!)
+     */
+    public function setPassword($password)
+    {
+        $this->password = password_hash($password, PASSWORD_BCRYPT);
     }
 
     /**

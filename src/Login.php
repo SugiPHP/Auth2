@@ -19,7 +19,6 @@ use UnexpectedValueException;
 
 class Login
 {
-    use PasswordHashTrait;
     use LoggerTrait;
     use StorageTrait;
 
@@ -86,8 +85,7 @@ class Login
 
         $this->checkState($user->getState());
 
-        // check password
-        if (!$this->checkSecret($password, $user->getPassword())) {
+        if (!$user->checkPassword($password)) {
             throw new GeneralException($loginFailedMessage);
         }
 
@@ -97,7 +95,7 @@ class Login
         $this->user = $user;
 
         // Removing password from the return
-        return $user->withPassword(null);
+        return $user;
     }
 
     public function logout()
@@ -111,7 +109,7 @@ class Login
     public function getUser()
     {
         if ($this->user) {
-            return $this->user->withPassword(null);
+            return $this->user;
         }
 
         // No storage
@@ -148,7 +146,7 @@ class Login
         $this->user = $data;
 
         // Removing password from the return
-        return $this->user->withPassword(null);
+        return $this->user;
     }
 
     /**

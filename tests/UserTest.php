@@ -71,13 +71,21 @@ class UserTest extends \PHPUnit_Framework_TestCase
         new User(2, 'demo', 'demo@example.com', -199, 'passw0rd');
     }
 
-    public function testWithPassword()
+    public function testSetPassword()
     {
+        $newPassword = "newpassword";
         $user = new User(2, 'demo', 'demo@example.com', 1, 'passw0rd');
-        $user2 = $user->withPassword(null);
-        $this->assertTrue($user2 instanceof \SugiPHP\Auth2\User\UserInterface);
-        $this->assertNotEquals($user, $user2);
-        $this->assertEmpty($user2->getPassword());
+        $passwordHash1 = $user->getPassword();
+        $user->setPassword($newPassword);
+        $this->assertNotEquals($passwordHash1, $user->getPassword());
+    }
+
+    public function testSetPasswordCryptsPassword()
+    {
+        $newPassword = "newpassword";
+        $user = new User(2, 'demo', 'demo@example.com', 1, 'passw0rd');
+        $user->setPassword($newPassword);
+        $this->assertNotEquals($newPassword, $user->getPassword());
     }
 
     public function testWithToken()

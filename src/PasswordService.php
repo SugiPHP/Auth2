@@ -22,7 +22,6 @@ use UnexpectedValueException;
 
 class PasswordService extends Login
 {
-    // use PasswordHashTrait;
     // use LoggerTrait;
     // use StorageTrait;
 
@@ -110,9 +109,9 @@ class PasswordService extends Login
         }
 
         // crypt password
-        $passwordHash = $this->cryptSecret($password1);
+        $user->setPassword($password1);
 
-        $this->gateway->updatePassword($user->getId(), $passwordHash);
+        $this->gateway->updatePassword($user->getId(), $user->getPassword());
         $userString = $user->getId() . " (" . $user->getUsername() . "<" .$user->getEmail() . ">)";
         $this->log("debug", "User password is updated for user {$userString}");
 
@@ -120,10 +119,10 @@ class PasswordService extends Login
         $this->log("debug", "User token {$token} invalidated");
 
         if ($this->storage) {
-            $this->storage->set($user->withPassword($passwordHash));
+            $this->storage->set($user);
         }
 
-        return $user->withPassword(null);
+        return $user;
     }
 
     public function changePassword($old, $password1, $password2)
@@ -157,24 +156,24 @@ class PasswordService extends Login
         // Check passwords match and throw InvalidArgumentException on error
         $this->validator->checkPasswordConfirmation($password1, $password2);
 
-        if (!$this->checkSecret($old, $user->getPassword())) {
+        if (!$user->checkPassword($old)) {
             $this->log("error", "Cannot change user password: old user password is wrong");
             // Грешна стара парола
             throw new GeneralException("Your old password is invalid");
         }
 
         // crypt password
-        $passwordHash = $this->cryptSecret($password1);
+        $user->setPassword($password1);
 
-        $this->gateway->updatePassword($user->getId(), $passwordHash);
+        $this->gateway->updatePassword($user->getId(), $user->getPassword());
         $userText = "user {$user->getId()} ({$user->getUsername()}<{$user->getEmail()}>)";
         $this->log("debug", "User password changed for {$userText}");
 
         if ($this->storage) {
-            $this->storage->set($user->withPassword($passwordHash));
+            $this->storage->set($user);
         }
 
-        return $user->withPassword(null);
+        return $user;
     }
 
     /**

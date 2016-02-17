@@ -15,13 +15,13 @@ use SugiPHP\Auth2\Exception\InvalidArgumentException;
 use SugiPHP\Auth2\Exception\InvalidTokenException;
 use SugiPHP\Auth2\Exception\UserBlockedException;
 use SugiPHP\Auth2\User\UserInterface;
+use SugiPHP\Auth2\User\User;
 use SugiPHP\Auth2\LoggerTrait;
 use SugiPHP\Auth2\StorageTrait;
 use UnexpectedValueException;
 
 class Registration
 {
-    use PasswordHashTrait;
     use LoggerTrait;
     use StorageTrait;
 
@@ -84,8 +84,10 @@ class Registration
             throw new GeneralException("Има регистриран потребител с това потребителско име");
         }
 
+        $user = new User(-1, $username, $email, UserInterface::STATE_INACTIVE, "");
         // crypt password
-        $passwordHash = $this->cryptSecret($password);
+        $user->setPassword($password);
+        $passwordHash = $user->getPassword();
 
         // insert in the DB and get new user's ID or some other data that will be returned
         if (!$user = $this->gateway->add($email, $username, UserInterface::STATE_INACTIVE, $passwordHash)) {
@@ -141,7 +143,7 @@ class Registration
             $this->storage->set($user);
         }
 
-        return $user->withPassword(null);
+        return $user;
     }
 
     /**

@@ -63,13 +63,20 @@ interface UserInterface
     public function getPassword();
 
     /**
-     * Returns a new instance with given password hash.
+     * Sets a password.
      *
-     * @param string $passwordHash
-     *
-     * @return UserInterface instance
+     * @param string $password User's password (not encrypted!)
      */
-    public function withPassword($passwordHash);
+    public function setPassword($password);
+
+    /**
+     * Checks the password provided matches the stored hashed password.
+     *
+     * @param string $password
+     *
+     * @return boolean
+     */
+    public function checkPassword($password);
 
     /**
      * Returns activation or forgot password token.
