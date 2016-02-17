@@ -90,6 +90,13 @@ class User implements UserInterface
     public function checkPassword($password)
     {
         return password_verify($password, $this->passwordHash);
+
+        // TODO:
+        // if (password_needs_rehash($this->passwordHash, PASSWORD_DEFAULT)) {
+        //     $passwordHash = password_hash($password, PASSWORD_DEFAULT);
+        //     // store it in the DB
+        //     ...
+        // }
     }
 
     /**
@@ -99,7 +106,7 @@ class User implements UserInterface
      */
     public function setPassword($password)
     {
-        $this->passwordHash = password_hash($password, PASSWORD_BCRYPT);
+        $this->passwordHash = password_hash($password, PASSWORD_DEFAULT);
     }
 
     /**
