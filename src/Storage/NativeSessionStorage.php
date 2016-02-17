@@ -61,7 +61,7 @@ class NativeSessionStorage implements StorageInterface
     private function startSession()
     {
         if (PHP_SESSION_NONE === session_status()) {
-            session_start();
+            @session_start();
         }
     }
 }

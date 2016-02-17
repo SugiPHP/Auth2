@@ -12,12 +12,6 @@ use InvalidArgumentException;
 
 class NativeSessionStorageTest extends \PHPUnit_Framework_TestCase
 {
-
-    public function setUp()
-    {
-        @session_start();
-    }
-
     public function testSetSessionKey()
     {
         $storageSession = new NativeSessionStorage();
