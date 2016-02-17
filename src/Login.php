@@ -149,6 +149,21 @@ class Login
         return $this->user;
     }
 
+    public function loginAs($userId)
+    {
+        if (!$user = $this->gateway->getById($userId)) {
+            return ;
+        }
+        $this->checkState($user->getState());
+
+        if ($this->storage) {
+            $this->storage->set($user);
+        }
+        $this->user = $user;
+
+        return $user;
+    }
+
     /**
      * Checks current user state and throws exception if it is not active
      */

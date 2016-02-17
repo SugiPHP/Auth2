@@ -103,6 +103,11 @@ class Service
         return $this->getLoginService()->login($login, $password);
     }
 
+    public function loginAs($userId)
+    {
+        return $this->getLoginService()->loginAs($userId);
+    }
+
     public function logout()
     {
         return $this->getLoginService()->logout();
