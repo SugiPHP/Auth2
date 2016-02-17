@@ -22,7 +22,8 @@ class RandomTokenTest extends \PHPUnit_Framework_TestCase
     public function setUp()
     {
         $this->user = new User(1, "demo", "demo@example.com", UserInterface::STATE_INACTIVE, password_hash("demo", PASSWORD_BCRYPT));
-        $gateway = new Gateway([], new UserMapper());
+        $gateway = new Gateway([]);
+        $gateway->setUserMapper(new UserMapper());
         $this->tokenGen = new RandomToken($gateway);
     }
 

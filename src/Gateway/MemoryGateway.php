@@ -32,10 +32,19 @@ class MemoryGateway implements
      */
     private $tokens;
 
-    public function __construct(array $storage = [], UserMapperInterface $mapper = null)
+    public function __construct(array $storage = [])
+    {
+        $this->storage = $storage;
+    }
+
+    /**
+     * Register a User Mapper
+     *
+     * @param UserMapperInterface|null $mapper
+     */
+    public function setUserMapper(UserMapperInterface $mapper = null)
     {
         $this->mapper = $mapper;
-        $this->storage = $storage;
     }
 
     /**

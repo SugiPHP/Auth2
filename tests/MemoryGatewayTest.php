@@ -25,7 +25,8 @@ class MemoryGatewayTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $this->gateway = new Gateway(self::DEMODATA, new UserMapper());
+        $this->gateway = new Gateway(self::DEMODATA);
+        $this->gateway->setUserMapper(new UserMapper());
     }
 
     public function testGatewayImplementsLoginGatewayInterface()

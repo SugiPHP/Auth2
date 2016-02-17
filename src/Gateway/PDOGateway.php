@@ -15,23 +15,32 @@ class PDOGateway implements
     RegistrationGatewayInterface,
     PasswordGatewayInterface
 {
-    private $tableUsers = "auth2";
-    private $tableUsersFields = "id, username, email, password, state, reg_date, pass_change_date";
-
-    /**
-     * UserMapper Object
-     */
-    private $mapper;
+    protected $table = "auth2";
+    protected $fields = "id, username, email, password, state, reg_date, pass_change_date";
 
     /**
      * PDO handler
      */
-    private $db;
+    protected $db;
 
-    public function __construct(PDO $db, UserMapperInterface $mapper = null)
+    /**
+     * UserMapper Object
+     */
+    protected $mapper;
+
+    public function __construct(PDO $db)
+    {
+        $this->db = $db;
+    }
+
+    /**
+     * Register a User Mapper
+     *
+     * @param UserMapperInterface|null $mapper
+     */
+    public function setUserMapper(UserMapperInterface $mapper = null)
     {
         $this->mapper = $mapper;
-        $this->db = $db;
     }
 
     /**
@@ -39,7 +48,7 @@ class PDOGateway implements
      */
     public function getById($loginId)
     {
-        $sql = "SELECT {$this->tableUsersFields} FROM {$this->tableUsers} WHERE id = :id";
+        $sql = "SELECT {$this->fields} FROM {$this->table} WHERE id = :id";
         $sth = $this->db->prepare($sql);
         $sth->bindValue("id", (int) $loginId, PDO::PARAM_INT);
 
@@ -51,7 +60,7 @@ class PDOGateway implements
      */
     public function getByEmail($email)
     {
-        $sql = "SELECT {$this->tableUsersFields} FROM {$this->tableUsers} WHERE LOWER(email) = LOWER(:email)";
+        $sql = "SELECT {$this->fields} FROM {$this->table} WHERE LOWER(email) = LOWER(:email)";
         $sth = $this->db->prepare($sql);
         $sth->bindValue("email", $email, PDO::PARAM_STR);
 
@@ -63,7 +72,7 @@ class PDOGateway implements
      */
     public function getByUsername($username)
     {
-        $sql = "SELECT {$this->tableUsersFields} FROM {$this->tableUsers} WHERE LOWER(username) = LOWER(:username)";
+        $sql = "SELECT {$this->fields} FROM {$this->table} WHERE LOWER(username) = LOWER(:username)";
         $sth = $this->db->prepare($sql);
         $sth->bindValue("username", $username, PDO::PARAM_STR);
 
@@ -75,7 +84,7 @@ class PDOGateway implements
      */
     public function add($email, $username, $state, $passwordHash)
     {
-        $sql = "INSERT INTO {$this->tableUsers} (email, username, state, reg_date, password, pass_change_date)
+        $sql = "INSERT INTO {$this->table} (email, username, state, reg_date, password, pass_change_date)
                 VALUES (:email, :username, :state, :time, :password, :time)";
 
         if ($pg = ("pgsql" == $this->db->getAttribute(PDO::ATTR_DRIVER_NAME))) {
@@ -102,7 +111,7 @@ class PDOGateway implements
      */
     public function updateState($userId, $state)
     {
-        $sql = "UPDATE {$this->tableUsers} SET state = :state WHERE id = :id";
+        $sql = "UPDATE {$this->table} SET state = :state WHERE id = :id";
         $sth = $this->db->prepare($sql);
         $sth->bindValue("id", (int) $userId, PDO::PARAM_INT);
         $sth->bindValue("state", (int) $state, PDO::PARAM_INT);
@@ -116,7 +125,7 @@ class PDOGateway implements
      */
     public function updatePassword($userId, $passwordHash)
     {
-        $sql = "UPDATE {$this->tableUsers} SET password = :password WHERE id = :id";
+        $sql = "UPDATE {$this->table} SET password = :password WHERE id = :id";
         $sth = $this->db->prepare($sql);
         $sth->bindValue("id", (int) $userId, PDO::PARAM_INT);
         $sth->bindValue("password", $passwordHash);

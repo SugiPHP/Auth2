@@ -38,7 +38,8 @@ class PDOGatewayTest extends \PHPUnit_Framework_TestCase
         $db->exec(self::SCHEMA);
         $db->exec(self::DEMODATA);
 
-        $this->gateway = new Gateway($db, new UserMapper());
+        $this->gateway = new Gateway($db);
+        $this->gateway->setUserMapper(new UserMapper());
     }
 
     public function testGatewayImplementsLoginGatewayInterface()

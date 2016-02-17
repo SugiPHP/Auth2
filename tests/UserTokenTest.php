@@ -21,7 +21,8 @@ class UserTokenTest extends \PHPUnit_Framework_TestCase
     public function setUp()
     {
         $data = ["id" => 1, "username" => 'demo', "email" => 'demo@example.com', "password" => password_hash("demo", PASSWORD_BCRYPT), "state" => UserInterface::STATE_INACTIVE];
-        $this->gateway = new Gateway([1 => $data], new UserMapper());
+        $this->gateway = new Gateway([1 => $data]);
+        $this->gateway->setUserMapper(new UserMapper());
         $this->tokenGen = new UserToken($this->gateway);
     }
 
