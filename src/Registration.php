@@ -95,7 +95,7 @@ class Registration
             throw new GeneralException("Грешка при създаване на акаунт");
         }
 
-        $token = $this->tokenGen->generateToken($user);
+        $token = $this->tokenGen->generateToken($user->getId());
 
         return $user->withToken($token);
     }

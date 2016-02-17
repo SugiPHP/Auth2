@@ -25,9 +25,9 @@ class UserToken implements TokenInterface
     /**
      * @see TokenInterface::generateToken()
      */
-    public function generateToken(UserInterface $user)
+    public function generateToken($id)
     {
-        return $this->createUserBasedToken($user);
+        return $this->createUserBasedToken($id);
     }
 
     /**
@@ -36,15 +36,11 @@ class UserToken implements TokenInterface
     public function fetchToken($token)
     {
         $decoded = base64_decode($token);
-        if (!$userId = strstr($decoded, ".", true)) {
-            return false;
-        }
-        // get the user data from the DB
-        if (!$user = $this->gateway->getById($userId)) {
+        if (!$id = strstr($decoded, ".", true)) {
             return false;
         }
 
-        return ($token === $this->createUserBasedToken($user)) ? $userId : false;
+        return ($token === $this->createUserBasedToken($id)) ? $id : false;
     }
 
     /**
@@ -57,8 +53,13 @@ class UserToken implements TokenInterface
         return ;
     }
 
-    private function createUserBasedToken(UserInterface $user)
+    private function createUserBasedToken($id)
     {
+        // get the user data from the DB
+        if (!$user = $this->gateway->getById($id)) {
+            return null;
+        }
+
         $code = $user->getId() . $user->getPassword() . $user->getEmail() . $user->getState();
 
         // SHA-512 produces 128 chars

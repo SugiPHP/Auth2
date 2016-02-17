@@ -45,9 +45,10 @@ class ActivationTest extends \PHPUnit_Framework_TestCase
 
     public function testCheckActivation()
     {
-        $user = $this->gateway->getById(1);
+        $userId = 1;
+        $user = $this->gateway->getById($userId);
         $this->assertEquals(UserInterface::STATE_INACTIVE, $user->getState());
-        $token = $this->tokenGen->generateToken($user);
+        $token = $this->tokenGen->generateToken($userId);
         $user2 = $this->service->activate($token);
         $this->assertEquals(1, $user2->getId());
         $this->assertEquals(UserInterface::STATE_ACTIVE, $user2->getState());
@@ -55,9 +56,10 @@ class ActivationTest extends \PHPUnit_Framework_TestCase
 
     public function testCheckAlreadyActivatedReturnsTrue()
     {
-        $user = $this->gateway->getById(7);
+        $userId = 7;
+        $user = $this->gateway->getById($userId);
         $this->assertEquals(UserInterface::STATE_ACTIVE, $user->getState());
-        $token = $this->tokenGen->generateToken($user);
+        $token = $this->tokenGen->generateToken($userId);
         $this->assertTrue($this->service->activate($token));
     }
 
@@ -66,9 +68,10 @@ class ActivationTest extends \PHPUnit_Framework_TestCase
      */
     public function testCheckUserBlockedToken()
     {
-        $user = $this->gateway->getById(9);
+        $userId = 9;
+        $user = $this->gateway->getById($userId);
         $this->assertEquals(UserInterface::STATE_BLOCKED, $user->getState());
-        $token = $this->tokenGen->generateToken($user);
+        $token = $this->tokenGen->generateToken($userId);
         $this->assertTrue($this->service->activate($token));
         $this->service->activate($token);
     }
@@ -78,8 +81,9 @@ class ActivationTest extends \PHPUnit_Framework_TestCase
      */
     public function testCheckWrongToken()
     {
-        $user = $this->gateway->getById(7);
-        $token = $this->tokenGen->generateToken($user);
+        $userId = 7;
+        $user = $this->gateway->getById($userId);
+        $token = $this->tokenGen->generateToken($userId);
         $this->service->activate($token."123");
     }
 

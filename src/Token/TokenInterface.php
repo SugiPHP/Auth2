@@ -17,11 +17,11 @@ interface TokenInterface
     /**
      * Generates a unique token than can be used for account activations, forgot password, etc.
      *
-     * @param UserInterface $user
+     * @param integer $id
      *
      * @return string The generated token
      */
-    public function generateToken(UserInterface $user);
+    public function generateToken($id);
 
     /**
      * Fetch data hidden behind the token.

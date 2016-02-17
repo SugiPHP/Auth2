@@ -62,7 +62,7 @@ class PasswordService extends Login
         // check the state of the user
         $this->checkState($user);
         // generate new token
-        $token = $this->tokenGen->generateToken($user);
+        $token = $this->tokenGen->generateToken($user->getId());
 
         // return a new user instance with generated token
         return $user->withToken($token);

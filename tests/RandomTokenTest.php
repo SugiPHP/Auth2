@@ -40,14 +40,14 @@ class RandomTokenTest extends \PHPUnit_Framework_TestCase
 
     public function testGenerateReturnsRandomTokens()
     {
-        $token1 = $this->tokenGen->generateToken($this->user);
-        $token2 = $this->tokenGen->generateToken($this->user);
+        $token1 = $this->tokenGen->generateToken($this->user->getId());
+        $token2 = $this->tokenGen->generateToken($this->user->getId());
         $this->assertNotEquals($token1, $token2);
     }
 
     public function testGenerateReturnsTokensWithTokenLength()
     {
-        $token = $this->tokenGen->generateToken($this->user);
+        $token = $this->tokenGen->generateToken($this->user->getId());
         $this->assertEquals($this->tokenGen->getTokenLength(), strlen($token));
     }
 
@@ -55,13 +55,13 @@ class RandomTokenTest extends \PHPUnit_Framework_TestCase
     {
         $len = 50;
         $this->tokenGen->setTokenLength($len);
-        $token = $this->tokenGen->generateToken($this->user);
+        $token = $this->tokenGen->generateToken($this->user->getId());
         $this->assertEquals($len, strlen($token));
     }
 
     public function testFetchTokenReturnsTrueIfTokenIsSame()
     {
-        $token = $this->tokenGen->generateToken($this->user);
+        $token = $this->tokenGen->generateToken($this->user->getId());
         $this->assertEquals($this->user->getId(), $this->tokenGen->fetchToken($token));
     }
 
@@ -72,7 +72,7 @@ class RandomTokenTest extends \PHPUnit_Framework_TestCase
 
     public function testFetchTokenReturnsFalseIfTokenWrong()
     {
-        $token = $this->tokenGen->generateToken($this->user);
+        $token = $this->tokenGen->generateToken($this->user->getId());
         $this->assertFalse($this->tokenGen->fetchToken($token . "a"));
     }
 
@@ -81,7 +81,7 @@ class RandomTokenTest extends \PHPUnit_Framework_TestCase
      */
     public function testInvalidateToken()
     {
-        $token = $this->tokenGen->generateToken($this->user);
+        $token = $this->tokenGen->generateToken($this->user->getId());
         $this->tokenGen->invalidateToken($token);
         $this->assertFalse($this->tokenGen->fetchToken($token));
     }
