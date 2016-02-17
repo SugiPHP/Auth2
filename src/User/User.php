@@ -28,14 +28,10 @@ class User implements UserInterface
             throw new InvalidArgumentException("The username cannot be empty");
         }
 
-        if (!in_array($state, [UserInterface::STATE_ACTIVE, UserInterface::STATE_INACTIVE, UserInterface::STATE_BLOCKED])) {
-            throw new InvalidArgumentException("Unknown user state");
-        }
-
+        $this->setState($state);
         $this->id = $id;
         $this->username = $username;
         $this->email = $email;
-        $this->state = $state;
         $this->password = $password;
     }
 
@@ -114,22 +110,21 @@ class User implements UserInterface
     }
 
     /**
-     * Returns a new user instance with a given state
+     * Sets user state
      *
      * @param integer $state
      *
      * @return UserInterface instance
      */
-    public function withState($state)
+    public function setState($state)
     {
         if (!in_array($state, [UserInterface::STATE_ACTIVE, UserInterface::STATE_INACTIVE, UserInterface::STATE_BLOCKED])) {
             throw new InvalidArgumentException("Unknown user state");
         }
 
-        $new = clone $this;
-        $new->state = $state;
+        $this->state = $state;
 
-        return $new;
+        return $this;
     }
 
     /**
@@ -143,15 +138,14 @@ class User implements UserInterface
     }
 
     /**
-     * Returns a new instance with activation or forgot password token.
+     * Sets an activation or forgot password token.
      *
-     * @return string
+     * @param string $token
      */
-    public function withToken($token)
+    public function setToken($token)
     {
-        $new = clone $this;
-        $new->token = $token;
+        $this->token = $token;
 
-        return $new;
+        return $this;
     }
 }

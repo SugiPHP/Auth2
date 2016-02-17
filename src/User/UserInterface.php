@@ -47,13 +47,13 @@ interface UserInterface
     public function getState();
 
     /**
-     * Returns a new user instance with a given state
+     * Sets user state
      *
      * @param integer $state
      *
      * @return UserInterface instance
      */
-    public function withState($state);
+    public function setState($state);
 
     /**
      * Returns the encoded password.
@@ -86,11 +86,11 @@ interface UserInterface
     public function getToken();
 
     /**
-     * Returns a new instance with activation or forgot password token.
+     * Sets an activation or forgot password token.
      *
-     * @param string
+     * @param string $token
      *
-     * @return UserInterface instance
+     * @return self
      */
-    public function withToken($token);
+    public function setToken($token);
 }

@@ -88,23 +88,23 @@ class UserTest extends \PHPUnit_Framework_TestCase
         $this->assertNotEquals($newPassword, $user->getPassword());
     }
 
-    public function testWithToken()
+    public function testSetToken()
     {
         $user = new User(2, 'demo', 'demo@example.com', 1, 'passw0rd');
         $this->assertEmpty($user->getToken());
-        $user2 = $user->withToken("randomToken");
+        $user2 = $user->setToken("randomToken");
         $this->assertTrue($user2 instanceof \SugiPHP\Auth2\User\UserInterface);
-        $this->assertNotEquals($user, $user2);
+        $this->assertEquals($user, $user2);
         $this->assertEquals("randomToken", $user2->getToken());
     }
 
-    public function testWithState()
+    public function testSetState()
     {
         $user = new User(2, 'demo', 'demo@example.com', 1, 'passw0rd');
         $this->assertEquals(1, $user->getState());
-        $user2 = $user->withState(2);
+        $user2 = $user->setState(2);
         $this->assertTrue($user2 instanceof \SugiPHP\Auth2\User\UserInterface);
-        $this->assertNotEquals($user, $user2);
+        $this->assertEquals($user, $user2);
         $this->assertEquals(2, $user2->getState());
     }
 
@@ -114,7 +114,7 @@ class UserTest extends \PHPUnit_Framework_TestCase
     public function testWithStateTrhowsExceptionIfTheValueIsNotKnown()
     {
         $user = new User(2, 'demo', 'demo@example.com', 1, 'passw0rd');
-        $user2 = $user->withState(99);
+        $user->setState(99);
     }
 
     /**
@@ -123,6 +123,6 @@ class UserTest extends \PHPUnit_Framework_TestCase
     public function testWithStateTrhowsExceptionIfTheValueIsNotSet()
     {
         $user = new User(2, 'demo', 'demo@example.com', 1, 'passw0rd');
-        $user2 = $user->withState(false);
+        $user->setState(false);
     }
 }

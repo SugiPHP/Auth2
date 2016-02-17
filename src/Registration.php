@@ -96,8 +96,9 @@ class Registration
         }
 
         $token = $this->tokenGen->generateToken($user->getId());
+        $user->setToken($token);
 
-        return $user->withToken($token);
+        return $user;
     }
 
     /**
@@ -138,7 +139,7 @@ class Registration
 
         $this->tokenGen->invalidateToken($token);
 
-        $user = $user->withToken(null)->withState(UserInterface::STATE_ACTIVE);
+        $user->setToken(null)->setState(UserInterface::STATE_ACTIVE);
         if ($this->storage) {
             $this->storage->set($user);
         }

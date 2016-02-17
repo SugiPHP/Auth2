@@ -63,9 +63,10 @@ class PasswordService extends Login
         $this->checkState($user);
         // generate new token
         $token = $this->tokenGen->generateToken($user->getId());
+        $user->setToken($token);
 
         // return a new user instance with generated token
-        return $user->withToken($token);
+        return $user;
     }
 
     public function resetPassword($token, $password1, $password2)
@@ -105,7 +106,7 @@ class PasswordService extends Login
         // change to state if it is not already ACTIVE!
         if ($user->getState() == UserInterface::STATE_INACTIVE) {
             $this->gateway->updateState($user->getId(), UserInterface::STATE_ACTIVE);
-            $user = $user->withState(UserInterface::STATE_ACTIVE);
+            $user->setState(UserInterface::STATE_ACTIVE);
         }
 
         // crypt password
