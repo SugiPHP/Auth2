@@ -18,7 +18,7 @@ use SugiPHP\Auth2\Exception\InvalidTokenException;
 use SugiPHP\Auth2\Exception\GeneralException;
 use SugiPHP\Auth2\Exception\UserBlockedException;
 
-class PasswordServiceTest extends \PHPUnit_Framework_TestCase
+class PasswordServiceTest extends \PHPUnit\Framework\TestCase
 {
     const DEMODATA = [
         1 => ["id" => 1, "username" => 'foo',  "email" => 'foo@bar.com', "state" => 2],
@@ -30,7 +30,7 @@ class PasswordServiceTest extends \PHPUnit_Framework_TestCase
     private $service;
     private $tokenGen;
 
-    public function setUp()
+    public function setUp(): void
     {
         $data = self::DEMODATA;
         foreach ($data as &$row) {
@@ -64,27 +64,21 @@ class PasswordServiceTest extends \PHPUnit_Framework_TestCase
         $this->assertNotEmpty($user->getToken());
     }
 
-    /**
-     * @expectedException SugiPHP\Auth2\Exception\InvalidArgumentException
-     */
     public function testGenTokenWithNoEmailTrhowsException()
     {
+        $this->expectException(\SugiPHP\Auth2\Exception\InvalidArgumentException::class);
         $this->service->genToken("");
     }
 
-    /**
-     * @expectedException SugiPHP\Auth2\Exception\GeneralException
-     */
     public function testGenTokenWithUnregisteredEmailTrhowsException()
     {
+        $this->expectException(\SugiPHP\Auth2\Exception\GeneralException::class);
         $this->service->genToken("wrong@email.com");
     }
 
-    /**
-     * @expectedException SugiPHP\Auth2\Exception\UserBlockedException
-     */
     public function testGenTokenWithWrongStateTrhowsException()
     {
+        $this->expectException(\SugiPHP\Auth2\Exception\UserBlockedException::class);
         $this->service->genToken("blocked@example.com");
     }
 
@@ -112,51 +106,43 @@ class PasswordServiceTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(UserInterface::STATE_ACTIVE, $user->getState());
     }
 
-    /**
-     * @expectedException SugiPHP\Auth2\Exception\InvalidArgumentException
-     */
     public function testResetPasswordThrowsExceptionIfPasswordIsNotSet()
     {
         $password = "qwerty1234~!@#";
         $email = "demo@example.com";
         $user = $this->service->genToken($email);
         $token = $user->getToken();
+        $this->expectException(\SugiPHP\Auth2\Exception\InvalidArgumentException::class);
         $user = $this->service->resetPassword($token, "", $password);
     }
 
-    /**
-     * @expectedException SugiPHP\Auth2\Exception\InvalidArgumentException
-     */
     public function testResetPasswordThrowsExceptionIfPassword2IsNotSet()
     {
         $password = "qwerty1234~!@#";
         $email = "demo@example.com";
         $user = $this->service->genToken($email);
         $token = $user->getToken();
+        $this->expectException(\SugiPHP\Auth2\Exception\InvalidArgumentException::class);
         $user = $this->service->resetPassword($token, $password, "");
     }
 
-    /**
-     * @expectedException SugiPHP\Auth2\Exception\InvalidTokenException
-     */
     public function testResetPasswordThrowsExceptionIfTokenIsNotSet()
     {
         $password = "qwerty1234~!@#";
         $email = "demo@example.com";
         $user = $this->service->genToken($email);
         $token = $user->getToken();
+        $this->expectException(\SugiPHP\Auth2\Exception\InvalidTokenException::class);
         $user = $this->service->resetPassword("", $password, $password);
     }
 
-    /**
-     * @expectedException SugiPHP\Auth2\Exception\InvalidTokenException
-     */
     public function testResetPasswordThrowsExceptionOnWrongToken()
     {
         $password = "qwerty1234~!@#";
         $email = "demo@example.com";
         $user = $this->service->genToken($email);
         $token = $user->getToken();
+        $this->expectException(\SugiPHP\Auth2\Exception\InvalidTokenException::class);
         $user = $this->service->resetPassword($token."123", $password, $password);
     }
 
@@ -168,57 +154,47 @@ class PasswordServiceTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue($this->service->changePassword($old, $password, $password) instanceof UserInterface);
     }
 
-    /**
-     * @expectedException SugiPHP\Auth2\Exception\InvalidArgumentException
-     */
     public function testCahngePasswordThrowsExceptionIfOldPasswordIsEmpty()
     {
         $old = "demo";
         $password = "qwerty1234~!@#";
         $user = $this->service->login("demo", $old);
+        $this->expectException(\SugiPHP\Auth2\Exception\InvalidArgumentException::class);
         $this->service->changePassword("", $password, $password);
     }
 
-    /**
-     * @expectedException SugiPHP\Auth2\Exception\InvalidArgumentException
-     */
     public function testCahngePasswordThrowsExceptionIfNewPasswordIsEmpty()
     {
         $old = "demo";
         $password = "qwerty1234~!@#";
         $user = $this->service->login("demo", $old);
+        $this->expectException(\SugiPHP\Auth2\Exception\InvalidArgumentException::class);
         $this->service->changePassword($old, "", $password);
     }
 
-    /**
-     * @expectedException SugiPHP\Auth2\Exception\InvalidArgumentException
-     */
     public function testCahngePasswordThrowsExceptionIfRepeatPasswordIsEmpty()
     {
         $old = "demo";
         $password = "qwerty1234~!@#";
         $user = $this->service->login("demo", $old);
+        $this->expectException(\SugiPHP\Auth2\Exception\InvalidArgumentException::class);
         $this->service->changePassword($old, $password, "");
     }
 
-    /**
-     * @expectedException SugiPHP\Auth2\Exception\GeneralException
-     */
     public function testCahngePasswordThrowsExceptionIfUserIsNotLoggedIn()
     {
         $old = "demo";
         $password = "qwerty1234~!@#";
+        $this->expectException(\SugiPHP\Auth2\Exception\GeneralException::class);
         $this->service->changePassword($old, $password, $password);
     }
 
-    /**
-     * @expectedException SugiPHP\Auth2\Exception\GeneralException
-     */
     public function testCahngePasswordThrowsExceptionIfOldPassIsWrong()
     {
         $old = "demo";
         $password = "qwerty1234~!@#";
         $user = $this->service->login("demo", $old);
+        $this->expectException(\SugiPHP\Auth2\Exception\GeneralException::class);
         $this->service->changePassword("wrong", $password, $password);
     }
 }

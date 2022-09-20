@@ -18,7 +18,7 @@ use SugiPHP\Auth2\Exception\InvalidTokenException;
 use SugiPHP\Auth2\Exception\GeneralException;
 use SugiPHP\Auth2\Exception\UserBlockedException;
 
-class ActivationTest extends \PHPUnit_Framework_TestCase
+class ActivationTest extends \PHPUnit\Framework\TestCase
 {
     const DEMODATA = [
         1 => ["id" => 1, "username" => 'foo',  "email" => 'foo@bar.com', "state" => 2],
@@ -30,7 +30,7 @@ class ActivationTest extends \PHPUnit_Framework_TestCase
     private $service;
     private $tokenGen;
 
-    public function setUp()
+    public function setUp(): void
     {
         $data = self::DEMODATA;
         $this->gateway = new Gateway($data);
@@ -64,35 +64,29 @@ class ActivationTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue($this->service->activate($token));
     }
 
-    /**
-     * @expectedException SugiPHP\Auth2\Exception\UserBlockedException
-     */
     public function testCheckUserBlockedToken()
     {
         $userId = 9;
         $user = $this->gateway->getById($userId);
         $this->assertEquals(UserInterface::STATE_BLOCKED, $user->getState());
+        $this->expectException(\SugiPHP\Auth2\Exception\UserBlockedException::class);
         $token = $this->tokenGen->generateToken($userId);
         $this->assertTrue($this->service->activate($token));
         $this->service->activate($token);
     }
 
-    /**
-     * @expectedException SugiPHP\Auth2\Exception\GeneralException
-     */
     public function testCheckWrongToken()
     {
         $userId = 7;
         $user = $this->gateway->getById($userId);
         $token = $this->tokenGen->generateToken($userId);
+        $this->expectException(\SugiPHP\Auth2\Exception\GeneralException::class);
         $this->service->activate($token."123");
     }
 
-    /**
-     * @expectedException SugiPHP\Auth2\Exception\InvalidTokenException
-     */
     public function testExceptionIfTokenIsMissing()
     {
+        $this->expectException(\SugiPHP\Auth2\Exception\InvalidTokenException::class);
         $this->service->activate("");
     }
 }

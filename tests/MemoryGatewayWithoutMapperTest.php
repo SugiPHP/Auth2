@@ -11,7 +11,7 @@ use SugiPHP\Auth2\Gateway\MemoryGateway as Gateway;
 use SugiPHP\Auth2\Gateway\LoginGatewayInterface;
 use SugiPHP\Auth2\Gateway\RegistrationGatewayInterface;
 
-class MemoryGatewayWithoutMapperTest extends \PHPUnit_Framework_TestCase
+class MemoryGatewayWithoutMapperTest extends \PHPUnit\Framework\TestCase
 {
     const DEMODATA = [
         1 => ["id" => 1, "username" => 'foo',  "email" => 'foo@bar.com',      "password" => '', "state" => 2],
@@ -21,7 +21,7 @@ class MemoryGatewayWithoutMapperTest extends \PHPUnit_Framework_TestCase
 
     private $gateway;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->gateway = new Gateway(self::DEMODATA);
     }

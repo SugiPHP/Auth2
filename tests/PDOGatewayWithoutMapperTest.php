@@ -12,7 +12,7 @@ use SugiPHP\Auth2\Gateway\LoginGatewayInterface;
 use SugiPHP\Auth2\Gateway\RegistrationGatewayInterface;
 use PDO;
 
-class PDOGatewayWithoutMapperTest extends \PHPUnit_Framework_TestCase
+class PDOGatewayWithoutMapperTest extends \PHPUnit\Framework\TestCase
 {
     const SCHEMA = "CREATE TABLE auth2 (
         id INTEGER NOT NULL PRIMARY KEY,
@@ -29,7 +29,7 @@ class PDOGatewayWithoutMapperTest extends \PHPUnit_Framework_TestCase
 
     private $gateway;
 
-    public function setUp()
+    public function setUp(): void
     {
         $db = new PDO('sqlite::memory:');
         $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);

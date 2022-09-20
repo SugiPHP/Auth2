@@ -14,12 +14,12 @@ use SugiPHP\Auth2\User\UserMapper;
 use SugiPHP\Auth2\User\UserInterface;
 use SugiPHP\Auth2\User\User;
 
-class RandomTokenTest extends \PHPUnit_Framework_TestCase
+class RandomTokenTest extends \PHPUnit\Framework\TestCase
 {
     private $tokenGen;
     private $user;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->user = new User(1, "demo", "demo@example.com", UserInterface::STATE_INACTIVE, password_hash("demo", PASSWORD_BCRYPT));
         $gateway = new Gateway([]);

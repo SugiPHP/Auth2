@@ -10,7 +10,7 @@ namespace SugiPHP\Auth2\Tests;
 use SugiPHP\Auth2\Storage\NativeSessionStorage;
 use InvalidArgumentException;
 
-class NativeSessionStorageTest extends \PHPUnit_Framework_TestCase
+class NativeSessionStorageTest extends \PHPUnit\Framework\TestCase
 {
     public function testSetSessionKey()
     {

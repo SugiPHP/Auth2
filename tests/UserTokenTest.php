@@ -14,11 +14,11 @@ use SugiPHP\Auth2\Token\UserToken;
 use SugiPHP\Auth2\Token\TokenInterface;
 use SugiPHP\Auth2\Gateway\MemoryGateway as Gateway;
 
-class UserTokenTest extends \PHPUnit_Framework_TestCase
+class UserTokenTest extends \PHPUnit\Framework\TestCase
 {
     private $tokenGen;
 
-    public function setUp()
+    public function setUp(): void
     {
         $data = ["id" => 1, "username" => 'demo', "email" => 'demo@example.com', "password" => password_hash("demo", PASSWORD_BCRYPT), "state" => UserInterface::STATE_INACTIVE];
         $this->gateway = new Gateway([1 => $data]);

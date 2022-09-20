@@ -11,7 +11,7 @@ use SugiPHP\Auth2\User\User;
 use SugiPHP\Auth2\Exception\GeneralException;
 use SugiPHP\Auth2\Exception\InvalidArgumentException;
 
-class UserTest extends \PHPUnit_Framework_TestCase
+class UserTest extends \PHPUnit\Framework\TestCase
 {
     public function testUserCreation()
     {
@@ -23,51 +23,39 @@ class UserTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(2, $user->getId());
     }
 
-    /**
-     * @expectedException SugiPHP\Auth2\Exception\InvalidArgumentException
-     */
     public function testUserWithoutIdThrowsException()
     {
+        $this->expectException(\SugiPHP\Auth2\Exception\InvalidArgumentException::class);
         new User(null, 'demo', 'demo@example.com', 1, 'passw0rd');
     }
 
-    /**
-     * @expectedException SugiPHP\Auth2\Exception\InvalidArgumentException
-     */
     public function testUserWithoutIdThrowsException2()
     {
+        $this->expectException(\SugiPHP\Auth2\Exception\InvalidArgumentException::class);
         new User(false, 'demo', 'demo@example.com', 1, 'passw0rd');
     }
 
-    /**
-     * @expectedException SugiPHP\Auth2\Exception\InvalidArgumentException
-     */
     public function testUserWithId0ThrowsException()
     {
+        $this->expectException(\SugiPHP\Auth2\Exception\InvalidArgumentException::class);
         new User(0, 'demo', 'demo@example.com', 1, 'passw0rd');
     }
 
-    /**
-     * @expectedException SugiPHP\Auth2\Exception\InvalidArgumentException
-     */
     public function testUserWithoutUsernameThrowsException()
     {
+        $this->expectException(\SugiPHP\Auth2\Exception\InvalidArgumentException::class);
         new User(2, null, 'demo@example.com', 1, 'passw0rd');
     }
 
-    /**
-     * @expectedException SugiPHP\Auth2\Exception\InvalidArgumentException
-     */
     public function testUserWithEmptyUsernameThrowsException()
     {
+        $this->expectException(\SugiPHP\Auth2\Exception\InvalidArgumentException::class);
         new User(2, '', 'demo@example.com', 1, 'passw0rd');
     }
 
-    /**
-     * @expectedException SugiPHP\Auth2\Exception\InvalidArgumentException
-     */
     public function testUserWithWrongState()
     {
+        $this->expectException(\SugiPHP\Auth2\Exception\InvalidArgumentException::class);
         new User(2, 'demo', 'demo@example.com', -199, 'passw0rd');
     }
 
@@ -108,21 +96,17 @@ class UserTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(2, $user2->getState());
     }
 
-    /**
-     * @expectedException SugiPHP\Auth2\Exception\InvalidArgumentException
-     */
     public function testWithStateTrhowsExceptionIfTheValueIsNotKnown()
     {
         $user = new User(2, 'demo', 'demo@example.com', 1, 'passw0rd');
+        $this->expectException(\SugiPHP\Auth2\Exception\InvalidArgumentException::class);
         $user->setState(99);
     }
 
-    /**
-     * @expectedException SugiPHP\Auth2\Exception\InvalidArgumentException
-     */
     public function testWithStateTrhowsExceptionIfTheValueIsNotSet()
     {
         $user = new User(2, 'demo', 'demo@example.com', 1, 'passw0rd');
+        $this->expectException(\SugiPHP\Auth2\Exception\InvalidArgumentException::class);
         $user->setState(false);
     }
 }

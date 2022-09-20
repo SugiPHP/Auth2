@@ -14,7 +14,7 @@ use SugiPHP\Auth2\Storage\MemoryStorage as Storage;
 use SugiPHP\Auth2\Exception\GeneralException;
 use SugiPHP\Auth2\Exception\InvalidArgumentException;
 
-class LoginWithStorageTest extends \PHPUnit_Framework_TestCase
+class LoginWithStorageTest extends \PHPUnit\Framework\TestCase
 {
     const DEMODATA = [
         1 => ["id" => 1, "username" => 'foo',  "email" => 'foo@bar.com', "state" => 2],
@@ -25,7 +25,7 @@ class LoginWithStorageTest extends \PHPUnit_Framework_TestCase
     private $gateway;
     private $login;
 
-    public function setUp()
+    public function setUp(): void
     {
         $data = self::DEMODATA;
         foreach ($data as &$row) {

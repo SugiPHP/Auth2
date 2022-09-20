@@ -12,39 +12,33 @@ use SugiPHP\Auth2\Validator\ValidatorInterface;
 use Psr\Log\NullLogger;
 use SugiPHP\Auth2\Exception\InvalidArgumentException;
 
-class ValidatorTest extends \PHPUnit_Framework_TestCase
+class ValidatorTest extends \PHPUnit\Framework\TestCase
 {
     public function testCreate()
     {
         $this->assertTrue(new Validator() instanceof ValidatorInterface);
     }
 
-    /**
-     * @expectedException SugiPHP\Auth2\Exception\InvalidArgumentException
-     */
     public function testCheckEmailTrowsExceptionIfEmpty()
     {
         $validator = new Validator();
+        $this->expectException(\SugiPHP\Auth2\Exception\InvalidArgumentException::class);
         $validator->checkEmail("");
     }
 
-    /**
-     * @expectedException SugiPHP\Auth2\Exception\InvalidArgumentException
-     */
     public function testCheckEmailTrowsExceptionIfMoreThan255Chars()
     {
         $email = str_repeat("a", 244) . "@example.com"; // 256 chars
         $validator = new Validator();
+        $this->expectException(\SugiPHP\Auth2\Exception\InvalidArgumentException::class);
         $validator->checkEmail($email);
     }
 
-    /**
-     * @expectedException SugiPHP\Auth2\Exception\InvalidArgumentException
-     */
     public function testCheckEmailTrowsExceptionIfNoValidMailGiven()
     {
         $email = "foobar#example.com";
         $validator = new Validator();
+        $this->expectException(\SugiPHP\Auth2\Exception\InvalidArgumentException::class);
         $validator->checkEmail($email);
     }
 
@@ -55,43 +49,35 @@ class ValidatorTest extends \PHPUnit_Framework_TestCase
         $validator->checkEmail($email);
     }
 
-    /**
-     * @expectedException SugiPHP\Auth2\Exception\InvalidArgumentException
-     */
     public function testCheckUsernameEmpty()
     {
         $username = "";
         $validator = new Validator();
+        $this->expectException(\SugiPHP\Auth2\Exception\InvalidArgumentException::class);
         $validator->checkUsername($username);
     }
 
-    /**
-     * @expectedException SugiPHP\Auth2\Exception\InvalidArgumentException
-     */
     public function testCheckUsernameTooShort()
     {
         $username = "ab";
         $validator = new Validator();
+        $this->expectException(\SugiPHP\Auth2\Exception\InvalidArgumentException::class);
         $validator->checkUsername($username);
     }
 
-    /**
-     * @expectedException SugiPHP\Auth2\Exception\InvalidArgumentException
-     */
     public function testCheckUsernameTooLong()
     {
         $username = str_repeat("a", 33);
         $validator = new Validator();
+        $this->expectException(\SugiPHP\Auth2\Exception\InvalidArgumentException::class);
         $validator->checkUsername($username);
     }
 
-    /**
-     * @expectedException SugiPHP\Auth2\Exception\InvalidArgumentException
-     */
     public function testCheckUsernameIllegalChars()
     {
         $username = "E=mc^2";
         $validator = new Validator();
+        $this->expectException(\SugiPHP\Auth2\Exception\InvalidArgumentException::class);
         $validator->checkUsername($username);
     }
 
@@ -109,39 +95,30 @@ class ValidatorTest extends \PHPUnit_Framework_TestCase
         $validator->checkPassword($password);
     }
 
-    /**
-     * @expectedException SugiPHP\Auth2\Exception\InvalidArgumentException
-     */
     public function testCheckPasswordEmpty()
     {
         $password = "";
         $validator = new Validator();
+        $this->expectException(\SugiPHP\Auth2\Exception\InvalidArgumentException::class);
         $validator->checkPassword($password);
     }
 
-    /**
-     * @expectedException SugiPHP\Auth2\Exception\InvalidArgumentException
-     */
     public function testCheckPasswordTooShort()
     {
         $password = "aB6&";
         $validator = new Validator();
+        $this->expectException(\SugiPHP\Auth2\Exception\InvalidArgumentException::class);
         $validator->checkPassword($password);
     }
 
-    /**
-     * @expectedException SugiPHP\Auth2\Exception\InvalidArgumentException
-     */
     public function testCheckPasswordTooSimple()
     {
         $password = "1234567890";
         $validator = new Validator();
+        $this->expectException(\SugiPHP\Auth2\Exception\InvalidArgumentException::class);
         $validator->checkPassword($password);
     }
 
-    /**
-     * @depends testCheckPasswordIsOk
-     */
     public function testCheckPasswordConfirmation()
     {
         $password = "aB$ 2eF9--foo";
@@ -149,23 +126,19 @@ class ValidatorTest extends \PHPUnit_Framework_TestCase
         $validator->checkPasswordConfirmation($password, $password);
     }
 
-    /**
-     * @expectedException SugiPHP\Auth2\Exception\InvalidArgumentException
-     */
     public function testCheckPasswordConfirmationMissing2()
     {
         $password = "aB$ 2eF9--foo";
         $validator = new Validator();
+        $this->expectException(\SugiPHP\Auth2\Exception\InvalidArgumentException::class);
         $validator->checkPasswordConfirmation($password, "");
     }
 
-    /**
-     * @expectedException SugiPHP\Auth2\Exception\InvalidArgumentException
-     */
     public function testCheckPasswordConfirmationMissing()
     {
         $password = "aB$ 2eF9--foo";
         $validator = new Validator();
+        $this->expectException(\SugiPHP\Auth2\Exception\InvalidArgumentException::class);
         $validator->checkPasswordConfirmation($password."Q", $password);
     }
 }

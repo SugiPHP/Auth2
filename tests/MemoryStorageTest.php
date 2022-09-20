@@ -10,7 +10,7 @@ namespace SugiPHP\Auth2\Tests;
 use SugiPHP\Auth2\Storage\MemoryStorage;
 use InvalidArgumentException;
 
-class MemoryStorageTest extends \PHPUnit_Framework_TestCase
+class MemoryStorageTest extends \PHPUnit\Framework\TestCase
 {
     public function testSetAndGet()
     {

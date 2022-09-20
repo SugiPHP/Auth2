@@ -13,7 +13,7 @@ use SugiPHP\Auth2\Exception\GeneralException;
 use SugiPHP\Auth2\Exception\InvalidArgumentException;
 use SugiPHP\Auth2\Login;
 
-class LoginTest extends \PHPUnit_Framework_TestCase
+class LoginTest extends \PHPUnit\Framework\TestCase
 {
     const DEMODATA = [
         1 => ["id" => 1, "username" => 'foo',  "email" => 'foo@bar.com', "state" => 2],
@@ -24,7 +24,7 @@ class LoginTest extends \PHPUnit_Framework_TestCase
     private $gateway;
     private $login;
 
-    public function setUp()
+    public function setUp(): void
     {
         $data = self::DEMODATA;
         foreach ($data as &$row) {
@@ -59,59 +59,45 @@ class LoginTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($userdata["email"], $user->getEmail());
     }
 
-    /**
-     * @expectedException SugiPHP\Auth2\Exception\UserInactiveException
-     */
     public function testLoginFailsIfTheUserIsNotActive()
     {
+        $this->expectException(\SugiPHP\Auth2\Exception\UserInactiveException::class);
         $this->login->login("foo", "demo");
     }
 
-    /**
-     * @expectedException SugiPHP\Auth2\Exception\GeneralException
-     */
     public function testLoginFailsIfTheUsernameNotFound()
     {
+        $this->expectException(\SugiPHP\Auth2\Exception\GeneralException::class);
         $this->login->login("foobar", "demo");
     }
 
-    /**
-     * @expectedException SugiPHP\Auth2\Exception\GeneralException
-     */
     public function testLoginFailsIfTheEmailNotFound()
     {
+        $this->expectException(\SugiPHP\Auth2\Exception\GeneralException::class);
         $this->login->login("foobar@example.com", "demo");
     }
 
-    /**
-     * @expectedException SugiPHP\Auth2\Exception\UserBlockedException
-     */
     public function testLoginFailsIfTheUserIsBlocked()
     {
+        $this->expectException(\SugiPHP\Auth2\Exception\UserBlockedException::class);
         $this->login->login("bar", "demo");
     }
 
-    /**
-     * @expectedException SugiPHP\Auth2\Exception\InvalidArgumentException
-     */
     public function testLoginFailsIfNoUserIsGiven()
     {
+        $this->expectException(\SugiPHP\Auth2\Exception\InvalidArgumentException::class);
         $this->login->login("", "demo");
     }
 
-    /**
-     * @expectedException SugiPHP\Auth2\Exception\InvalidArgumentException
-     */
     public function testLoginFailsIfNoPasswordIsGiven()
     {
+        $this->expectException(\SugiPHP\Auth2\Exception\InvalidArgumentException::class);
         $this->login->login("demo", "");
     }
 
-    /**
-     * @expectedException SugiPHP\Auth2\Exception\GeneralException
-     */
     public function testLoginFailsIfThePasswordIsWrong()
     {
+        $this->expectException(\SugiPHP\Auth2\Exception\GeneralException::class);
         $this->login->login("demo", "wrongpass");
     }
 

@@ -16,7 +16,7 @@ use SugiPHP\Auth2\Token\UserToken;
 use SugiPHP\Auth2\Registration;
 use Psr\Log\NullLogger;
 
-class RegistrationTest extends \PHPUnit_Framework_TestCase
+class RegistrationTest extends \PHPUnit\Framework\TestCase
 {
     const PASS = "strongPassword12345&*(";
     const DEMODATA = [
@@ -28,7 +28,7 @@ class RegistrationTest extends \PHPUnit_Framework_TestCase
     private $service;
     private $tokenGen;
 
-    public function setUp()
+    public function setUp(): void
     {
         $data = self::DEMODATA;
         $this->gateway = new Gateway($data);
@@ -49,84 +49,64 @@ class RegistrationTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals("newuser@example.com", $user->getEmail());
     }
 
-    /**
-     * @expectedException SugiPHP\Auth2\Exception\GeneralException
-     */
     public function testExceptionIfUsernameExists()
     {
+        $this->expectException(\SugiPHP\Auth2\Exception\GeneralException::class);
         $this->service->register("no@email.com", "demo", self::PASS, self::PASS);
     }
 
-    /**
-     * @expectedException SugiPHP\Auth2\Exception\GeneralException
-     */
     public function testExceptionIfEmailExists()
     {
+        $this->expectException(\SugiPHP\Auth2\Exception\GeneralException::class);
         $this->service->register("demo@example.com", "wronguser", self::PASS, self::PASS);
     }
 
-    /**
-     * @expectedException SugiPHP\Auth2\Exception\InvalidArgumentException
-     */
     public function testExceptionIfEmailNotValid()
     {
+        $this->expectException(\SugiPHP\Auth2\Exception\InvalidArgumentException::class);
         $this->service->register("demo#example.com", "newuser", self::PASS, self::PASS);
     }
 
-    /**
-     * @expectedException SugiPHP\Auth2\Exception\InvalidArgumentException
-     */
     public function testExceptionIfUsernameIsEmpty()
     {
+        $this->expectException(\SugiPHP\Auth2\Exception\InvalidArgumentException::class);
         $this->service->register("demo@example.com", "", self::PASS, self::PASS);
     }
 
-    /**
-     * @expectedException SugiPHP\Auth2\Exception\InvalidArgumentException
-     */
     public function testExceptionIfEmailIsEmpty()
     {
+        $this->expectException(\SugiPHP\Auth2\Exception\InvalidArgumentException::class);
         $this->service->register("", "newuser", self::PASS, self::PASS);
     }
 
-    /**
-     * @expectedException SugiPHP\Auth2\Exception\InvalidArgumentException
-     */
     public function testExceptionIfPasswrodIsEmpty()
     {
+        $this->expectException(\SugiPHP\Auth2\Exception\InvalidArgumentException::class);
         $this->service->register("newmail@example.com", "newuser", "", self::PASS);
     }
 
-    /**
-     * @expectedException SugiPHP\Auth2\Exception\InvalidArgumentException
-     */
     public function testExceptionIfPasswrodConfirmationIsEmpty()
     {
+        $this->expectException(\SugiPHP\Auth2\Exception\InvalidArgumentException::class);
         $this->service->register("newmail@example.com", "newuser", self::PASS, "");
     }
 
-    /**
-     * @expectedException SugiPHP\Auth2\Exception\InvalidArgumentException
-     */
     public function testExceptionIfPasswrodConfirmationDiffers()
     {
+        $this->expectException(\SugiPHP\Auth2\Exception\InvalidArgumentException::class);
         $this->service->register("newmail@example.com", "newuser", self::PASS, self::PASS . "+");
     }
 
-    /**
-     * @expectedException SugiPHP\Auth2\Exception\InvalidArgumentException
-     */
     public function testExceptionIfPasswrodTooWeek()
     {
+        $this->expectException(\SugiPHP\Auth2\Exception\InvalidArgumentException::class);
         $this->service->register("newmail@example.com", "newuser", "abc", "abc");
     }
 
-    /**
-     * @expectedException SugiPHP\Auth2\Exception\GeneralException
-     */
     public function testLogger()
     {
         $this->service->setLogger(new NullLogger());
+        $this->expectException(\SugiPHP\Auth2\Exception\GeneralException::class);
         $this->service->register("foo@bar.com", "newuser", self::PASS, self::PASS);
     }
 }
